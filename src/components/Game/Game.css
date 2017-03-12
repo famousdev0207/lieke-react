@@ -25,7 +25,9 @@
 .taskCard {
 }
 #camera {
-	width : 100%;
+	position: absolute;
+	top: 10px;
+	left: 10px;
 }
 .takeIcon {
 	position : relative;

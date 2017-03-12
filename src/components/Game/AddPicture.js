@@ -11,6 +11,7 @@ import AgainIcon from 'material-ui/svg-icons/action/cached';
 
 //Camera
 import Webcam from 'react-webcam';
+import { getUserMedia } from 'getusermedia-js';
 
 class AddPicture extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class AddPicture extends React.Component {
     this.state = {
       screenshot: null,
       open: true,
-      width: window.innerWidth -48,
+      width: window.innerWidth - 40,
     };
   }
   componentDidMount(x,y,z){
@@ -67,6 +68,10 @@ class AddPicture extends React.Component {
   	    background: 'rgba(0,0,0,0.5)'
   	    
   	  },
+      img: {
+        width: this.state.width,
+        height: this.state.width * 0.75
+      }
   	};
     console.log(this.state.width);
     return (
@@ -83,22 +88,25 @@ class AddPicture extends React.Component {
           contentStyle={{
             width: '100%',
             maxWidth: '450px',
-            maxHeight: '100% !important'
+            maxHeight: '100% !important',
+            padding: '10px !important'
           }}
           bodyStyle={{
-             maxHeight: '100% !important'
+             maxHeight: '100% !important',
+             padding: '0px !important'
           }}
           style={{
              paddingTop:'0 !important',
              marginTop:'-65px !important',
              bottom: '0 !important',
              overflow: 'scroll !important',
-             height: 'auto !important'
+             height: 'auto !important',
+             padding: '0px !important'
           }}
         >
           <div>
             { !this.state.screenshot ? <Webcam id="camera" width={this.state.width} height={this.state.width * 0.75}  audio={false} ref='webcam'/> : null }
-            { this.state.screenshot ? <img src={this.state.screenshot} /> : null }
+            { this.state.screenshot ? <img src={this.state.screenshot} style={styles.img} /> : null }
           </div>
           <div>
             <IconButton className="takeIcon"  iconStyle={styles.medium} onTouchTap={this.screenshot}>
@@ -106,7 +114,7 @@ class AddPicture extends React.Component {
             </IconButton>
           </div>
         </Dialog>
-        { this.state.screenshot ? <img src={this.state.screenshot} /> : null }
+        { this.state.screenshot ? <img src={this.state.screenshot} style={styles.img}  /> : null }
    		</div>
     );
   }
