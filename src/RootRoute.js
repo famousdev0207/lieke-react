@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Route, browserHistory, hashHistory, useRouterHistory, createHistory } from 'react-router';
 
 import App from './components/App';
+import Game from './components/Game';
 
 
 //redux
@@ -29,6 +30,7 @@ class RootRoute extends React.Component {
     return (
       <Router history={browserHistory}>
           <Route path="/" component={App} />
+          <Route path="/game" component={Game} />
       </Router>
     );
   }

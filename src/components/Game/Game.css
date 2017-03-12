@@ -1,0 +1,36 @@
+
+.appMain {
+	display         : flex;
+	width           : 100%;
+	padding         : 0 !important;
+	font-family     : Roboto, sans-serif;
+	align-items     : center;
+	justify-content : center;
+	flex-direction  : column;
+}
+.topCard {
+	display         : flex;
+	min-height      : 30vh;
+	padding         : 10px;
+	background      : linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%);
+	align-items     : center;
+	justify-content : center;
+}
+.userName {
+	padding : 10px;
+}
+.taskCard {
+}
+#camera {
+	max-width : 300px;
+}
+.takeIcon {
+	position : relative;
+	display  : inline-block;
+	
+	left     : calc(50% - 40px);
+	background-color: #fff;
+	overflow : hidden;
+	height   : 120px;
+	width    : 120px;
+}
