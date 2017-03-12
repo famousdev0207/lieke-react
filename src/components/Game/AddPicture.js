@@ -110,7 +110,7 @@ class AddPicture extends React.Component {
           }}
         >
           <div>
-            { !this.state.screenshot ? <Webcam id="camera" width={width} height='auto'  audio={false} ref='webcam'/> : null }
+            { !this.state.screenshot ? <Webcam id="camera" width={width} height={width*0.5}  audio={false} ref='webcam'/> : null }
             { this.state.screenshot ? <img src={this.state.screenshot} style={styles.img} /> : null }
           </div>
           <div>
@@ -120,6 +120,7 @@ class AddPicture extends React.Component {
           </div>
         </Dialog>
         { this.state.screenshot ? <img src={this.state.screenshot} style={styles.img}  /> : null }
+
    		</div>
     );
   }
