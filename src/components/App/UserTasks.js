@@ -1,4 +1,5 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 
 //Material UI elements
 import Paper from 'material-ui/Paper';
@@ -24,7 +25,9 @@ class UserTasks extends React.Component {
   handleClose = () => {
     this.setState({open: false});
   };
-
+  goToTask = () => {
+    browserHistory.push('/game');
+  }
   render() {
 
     const actions = [
@@ -37,7 +40,7 @@ class UserTasks extends React.Component {
         label="Start"
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.handleClose}
+        onTouchTap={this.goToTask}
       />,
     ];
 
