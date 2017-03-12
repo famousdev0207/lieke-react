@@ -35,7 +35,7 @@
 	
 	left     : calc(50% - 35px);
 	background-color: #fff;
-	
+	overflow: visible;
 	height   : 120px;
 	width    : 120px;
 }
