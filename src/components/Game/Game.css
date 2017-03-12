@@ -25,7 +25,7 @@
 .taskCard {
 }
 #camera {
-	max-width : 300px;
+	width : 100%;
 }
 .takeIcon {
 	position : relative;
@@ -33,7 +33,14 @@
 	
 	left     : calc(50% - 35px);
 	background-color: #fff;
-	overflow : hidden;
+	
 	height   : 120px;
 	width    : 120px;
+}
+.cameraDialog {
+	margin-top: -100px;
+	width: 360px;
+	height: 400px !important;
+	max-width: 450px;
+	padding: 0 !important;
 }
