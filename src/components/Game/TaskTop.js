@@ -11,7 +11,7 @@ class TaskTop extends React.Component {
   render() {
     return (
    		<Paper zDepth={1} className="topCard">
-		     <h3 className="userName">Game name</h3>
+		     <h2 className="userName">Sports</h2>
 		</Paper>
     );
   }

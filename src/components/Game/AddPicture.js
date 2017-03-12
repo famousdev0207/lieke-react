@@ -45,12 +45,15 @@ class AddPicture extends React.Component {
   	console.log(this.state.screenshot);
     return (
     	<div>
-   			{ !this.state.screenshot ? <Webcam id="camera" width='auto' height={220} audio={false} ref='webcam'/> : null }
-   		
-   			{ this.state.screenshot ? <img src={this.state.screenshot} /> : null }
-   			<IconButton className="takeIcon"  iconStyle={styles.medium} onTouchTap={this.screenshot}>
-		      {this.state.screenshot === null ? <CameraIcon /> : <AgainIcon/>}
-		    </IconButton>
+   			<div>
+          { !this.state.screenshot ? <Webcam id="camera" width='auto' height={220} audio={false} ref='webcam'/> : null }
+   			  { this.state.screenshot ? <img src={this.state.screenshot} /> : null }
+   			</div>
+        <div>
+          <IconButton className="takeIcon"  iconStyle={styles.medium} onTouchTap={this.screenshot}>
+            {this.state.screenshot === null ? <CameraIcon /> : <AgainIcon/>}
+          </IconButton>
+        </div>
    		</div>
     );
   }
