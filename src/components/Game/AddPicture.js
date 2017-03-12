@@ -58,6 +58,10 @@ class AddPicture extends React.Component {
         onTouchTap={this.handleClose}
       />
     ];
+    let width = window.innerWidth;
+    if(window.innerWidth >= 450 ) {
+      width = 450;
+    }
   	const styles = {
   	  medium: {
   	    width: 30,
@@ -69,11 +73,12 @@ class AddPicture extends React.Component {
   	    
   	  },
       img: {
-        width: this.state.width,
-        height: this.state.width * 0.75
+        width: width,
+        height: 'auto'
       }
   	};
     console.log(this.state.width);
+    
     return (
     	<div>
    			
@@ -105,7 +110,7 @@ class AddPicture extends React.Component {
           }}
         >
           <div>
-            { !this.state.screenshot ? <Webcam id="camera" width={this.state.width} height={this.state.width * 0.75}  audio={false} ref='webcam'/> : null }
+            { !this.state.screenshot ? <Webcam id="camera" width={width} height='auto'  audio={false} ref='webcam'/> : null }
             { this.state.screenshot ? <img src={this.state.screenshot} style={styles.img} /> : null }
           </div>
           <div>
