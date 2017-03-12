@@ -1,9 +1,21 @@
+.appMain {
+	font-family: Roboto, sans-serif;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	padding: 0 !important;
 
+}
 .userCard {
 	min-height : 20vh;
 	padding    : 10px;
 	text-align : center;
+	background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%);
 }
 .userName {
 	padding : 10px;
+}
+.taskCard {
 }

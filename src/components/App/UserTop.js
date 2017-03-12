@@ -31,9 +31,9 @@ const mapDispatchToProps = (dispatch) => {
 
 class UserTop extends React.Component {
 	
-
+  	
+    
   render() {
-
     return (
    		<Paper zDepth={1} className="userCard">
 		    <Avatar
