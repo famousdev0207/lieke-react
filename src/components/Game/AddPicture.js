@@ -73,8 +73,8 @@ class AddPicture extends React.Component {
   	    
   	  },
       img: {
-        width: width,
-        height: 'auto'
+        width: '350px',
+        height: '262px'
       }
   	};
     console.log(this.state.width);
@@ -110,7 +110,7 @@ class AddPicture extends React.Component {
           }}
         >
           <div>
-            { !this.state.screenshot ? <Webcam id="camera" width={width} height={width*0.5}  audio={false} ref='webcam'/> : null }
+            { !this.state.screenshot ? <Webcam id="camera" width={'350px'} height={'262px'}  audio={false} ref='webcam'/> : null }
             { this.state.screenshot ? <img src={this.state.screenshot} style={styles.img} /> : null }
           </div>
           <div>
