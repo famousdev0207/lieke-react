@@ -1,0 +1,9 @@
+
+.userCard {
+	min-height : 20vh;
+	padding    : 10px;
+	text-align : center;
+}
+.userName {
+	padding : 10px;
+}
