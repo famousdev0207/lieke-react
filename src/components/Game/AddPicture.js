@@ -18,9 +18,12 @@ class AddPicture extends React.Component {
     this.state = {
       screenshot: null,
       open: true,
+      width: window.innerWidth -48,
     };
   }
-  
+  componentDidMount(x,y,z){
+   this.setState({height: window.innerWidth});
+  }
   screenshot = () => {
   		if (this.state.screenshot === null) {
   			let screenshot = this.refs.webcam.getScreenshot();
@@ -65,7 +68,7 @@ class AddPicture extends React.Component {
   	    
   	  },
   	};
-
+    console.log(this.state.width);
     return (
     	<div>
    			
@@ -94,7 +97,7 @@ class AddPicture extends React.Component {
           }}
         >
           <div>
-            { !this.state.screenshot ? <Webcam id="camera" className="cameraDialog" audio={false} ref='webcam'/> : null }
+            { !this.state.screenshot ? <Webcam id="camera" width={this.state.width} height={this.state.width * 0.75}  audio={false} ref='webcam'/> : null }
             { this.state.screenshot ? <img src={this.state.screenshot} /> : null }
           </div>
           <div>
