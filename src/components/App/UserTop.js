@@ -39,6 +39,7 @@ class UserTop extends React.Component {
 		    <Avatar
 	          src={UserImg}
 	          size={150}
+            className="avatar"
 	        />
 	        <h3 className="userName">Max Prokopenko</h3>
 		</Paper>

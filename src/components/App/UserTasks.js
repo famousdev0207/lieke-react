@@ -36,7 +36,7 @@ class UserTasks extends React.Component {
         primary={true}
         onTouchTap={this.handleClose}
       />,
-      <FlatButton
+      <RaisedButton
         label="Start"
         primary={true}
         keyboardFocused={true}
@@ -49,16 +49,16 @@ class UserTasks extends React.Component {
      		<Paper zDepth={1} className="taskCard">
   		      <List>
             <Subheader>Newest games</Subheader>
-              <ListItem primaryText="Game" rightIcon={<ActionInfo />} onTouchTap={this.handleOpen}/>
-              <ListItem primaryText="Game" rightIcon={<ActionInfo />} onTouchTap={this.handleOpen}/>
-              <ListItem primaryText="Game" rightIcon={<ActionInfo />} onTouchTap={this.handleOpen}/>
+              <ListItem primaryText="Game" rightIcon={<ActionInfo color="#005C97" />} onTouchTap={this.handleOpen}/>
+              <ListItem primaryText="Game" rightIcon={<ActionInfo color="#005C97" />} onTouchTap={this.handleOpen}/>
+              <ListItem primaryText="Game" rightIcon={<ActionInfo color="#005C97" />} onTouchTap={this.handleOpen}/>
             </List>
             <Divider />
             <List>
             <Subheader>Latest scores</Subheader>
-              <ListItem primaryText="Game" rightIcon={<ActionInfo />} onTouchTap={this.handleOpen}/>
-              <ListItem primaryText="Game" rightIcon={<ActionInfo />} onTouchTap={this.handleOpen}/>
-              <ListItem primaryText="Game" rightIcon={<ActionInfo />} onTouchTap={this.handleOpen}/>
+              <ListItem primaryText="Game" rightIcon={<h3 className="grade">9,5</h3>} onTouchTap={this.handleOpen}/>
+              <ListItem primaryText="Game" rightIcon={<h3 className="grade">9,5</h3>} onTouchTap={this.handleOpen}/>
+              <ListItem primaryText="Game" rightIcon={<h3 className="grade">9,5</h3>} onTouchTap={this.handleOpen}/>
             </List>
   		  </Paper>
         <Dialog

@@ -1,4 +1,5 @@
 import React from 'react';
+import { browserHistory } from 'react-router';
 
 //Material UI elements
 import FlatButton from 'material-ui/FlatButton';
@@ -11,10 +12,9 @@ import {
   StepContent,
 } from 'material-ui/Stepper';
 
-
 //Components
 import AddPicture from './AddPicture';
-
+import TaskDialog from './TaskDialog';
 //Images
 import UserImg from '../../images/max.jpg';
 
@@ -43,7 +43,8 @@ class Task extends React.Component {
 	
    state = {
       finished: false,
-      stepIndex: 0,
+      stepIndex: 0, //set to 2 sentences for development
+      value: ""
     };
 
     handleNext = () => {
@@ -52,6 +53,9 @@ class Task extends React.Component {
         stepIndex: stepIndex + 1,
         finished: stepIndex >= 2,
       });
+      if (stepIndex >= 2) {
+        browserHistory.push('/');
+      }
     };
 
     handlePrev = () => {
@@ -61,6 +65,7 @@ class Task extends React.Component {
       }
     };
 
+    
     renderStepActions(step) {
       const {stepIndex} = this.state;
 
@@ -97,9 +102,10 @@ class Task extends React.Component {
               <StepLabel>Instructions</StepLabel>
               <StepContent>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut urna justo, fermentum at mauris at, 
-                  tempus maximus lorem. Integer eu egestas ipsum. Curabitur sed libero quis turpis sagittis faucibus
-                  id in quam. Nulla facilisi. Integer nisl quam, facilisis ac eleifend quis, varius et ex.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
+                  Ut urna justo, fermentum at mauris at, empus maximus lorem. 
+                  Curabitur sed libero quis turpis sagittis faucibus id in quam.
+                  Integer nisl quam, facilisis ac eleifend quis, varius et ex.
                 </p>
                 {this.renderStepActions(0)}
               </StepContent>
@@ -114,28 +120,13 @@ class Task extends React.Component {
             <Step>
               <StepLabel>Fill up sentences</StepLabel>
               <StepContent>
-                <p>
-                  Lorem ipsum dolor sit amet, _________ adipiscing elit. Ut urna justo, _________ at mauris at, 
-                  tempus maximus lorem. Integer eu egestas ipsum. Curabitur sed libero quis turpis sagittis faucibus
-                  id in quam. Nulla _________. Integer nisl quam, _________ ac eleifend quis, varius et ex.
-                </p>
+               
+                  <TaskDialog />
+               
                 {this.renderStepActions(2)}
               </StepContent>
             </Step>
           </Stepper>
-          {finished && (
-            <p style={{margin: '20px 0', textAlign: 'center'}}>
-              <a
-                href="#"
-                onClick={(event) => {
-                  event.preventDefault();
-                  this.setState({stepIndex: 0, finished: false});
-                }}
-              >
-                Click here
-              </a> to reset the example.
-            </p>
-          )}
         </div>
       );
     }

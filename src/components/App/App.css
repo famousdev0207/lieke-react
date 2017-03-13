@@ -12,10 +12,23 @@
 	min-height : 20vh;
 	padding    : 10px;
 	text-align : center;
-	background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%);
+	color: #fff !important;
+	background: #005C97; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #005C97 , #363795); /* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #005C97 , #363795); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ 
+	background: linear-gradient(90deg, #dee1e1 10%, #f4f4f4 90%);*/
+     
+}
+.avatar {
+	border-radius: 50%;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
 }
 .userName {
 	padding : 10px;
+	text-shadow: 1px 1px 1px #000;
 }
 .taskCard {
+}
+.grade, .info {
+	color: #005C97;
 }
