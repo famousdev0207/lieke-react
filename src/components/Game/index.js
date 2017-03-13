@@ -39,9 +39,14 @@ const mapDispatchToProps = (dispatch) => {
 class App extends Component {
   render() {
     const { className, ...props } = this.props;
+    const muiTheme = getMuiTheme({}, {
+      palette: {
+        primary1Color: '#005C97',
+      }
+    });
 
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(allroundersBaseTheme)} >
+      <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div>
           <TaskTop />
           <Task />

@@ -38,6 +38,11 @@ const mapDispatchToProps = (dispatch) => {
 class App extends Component {
   render() {
     const { className, ...props } = this.props;
+    const muiTheme = getMuiTheme({}, {
+      palette: {
+        primary1Color: '#005C97',
+      }
+    });
     const styles = {
       main: {
         overflow: 'scroll !important'
@@ -60,7 +65,7 @@ class App extends Component {
     };
 
     return (
-      <MuiThemeProvider muiTheme={getMuiTheme(allroundersBaseTheme)} >
+      <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div>
           <UserTop />
           <UserTasks />
