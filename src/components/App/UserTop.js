@@ -1,5 +1,7 @@
 import React from 'react';
 
+import CountUp from 'react-countup';
+
 //Material UI elements
 import FlatButton from 'material-ui/FlatButton';
 import Paper from 'material-ui/Paper';
@@ -42,6 +44,8 @@ class UserTop extends React.Component {
             className="avatar"
 	        />
 	        <h3 className="userName">Max Prokopenko</h3>
+          <h1> <CountUp start={0} end={195} /> </h1>
+          <p className="score"> MY SCORE </p>
 		</Paper>
     );
   }
