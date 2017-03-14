@@ -1,0 +1,41 @@
+.main {
+	background: #fff !important;
+}
+.cards {
+	width: 100%;
+	display: flex;
+	align-items: flex-start;
+	justify-content: center;
+	flex-wrap: wrap;
+
+}
+.studentCard {
+	max-width: 25vw;
+	min-width: 340px;
+	margin: 50px;
+	padding: 20px;
+}
+.chartCard {
+	
+	min-width: 340px;
+	margin: 50px;
+	padding: 20px;
+}
+.studentNum {
+	text-align: center;
+	font-size: 32px;
+	margin-top: 0 !important;
+	color:#005C97;
+}
+.mystudents {
+	text-align: center;
+	font-size: 12px;
+	margin-top: -20px;
+	padding-bottom: 20px;
+}
+.add {
+	position: relative;
+	top: 5px;
+	right: 5px;
+	color: #005C97;
+}

@@ -4,6 +4,7 @@ import { Router, Route, browserHistory, hashHistory, useRouterHistory, createHis
 import App from './components/App';
 import Game from './components/Game';
 import Blocks from './components/Blocks';
+import Admin from './components/Admin';
 
 
 //redux
@@ -33,6 +34,7 @@ class RootRoute extends React.Component {
           <Route path="/" component={App} />
           <Route path="/game" component={Game} />
           <Route path="/blocks" component={Blocks} />
+          <Route path="/admin" component={Admin} />
       </Router>
     );
   }

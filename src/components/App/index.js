@@ -7,7 +7,6 @@ import {AppBar, IconButton, IconMenu, MenuItem} from 'material-ui';
 //Components
 import UserTop from './UserTop';
 import UserTasks from './UserTasks';
-import Score from './Score';
 
 //styles
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
