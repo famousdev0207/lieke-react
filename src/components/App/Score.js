@@ -34,8 +34,7 @@ class Score extends React.Component {
   render() {
     return (
    		<Paper zDepth={0} className="userCard">
-		    <h1> 145 </h1>
-        <h4> My score </h4>
+		    
       </Paper>
     );
   }
