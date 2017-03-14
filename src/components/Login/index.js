@@ -106,13 +106,18 @@ class Login extends React.Component {
     const styles = {
       card: {
         textAlign: 'center',
-        width: '100vw',
-        height: '100vh',
-        paddingTop: '25vh',
+        postion: 'fixed',
+        top: 0,
+        left: 0,
+        paddingTop: '20vh',
+        height: window.innerHeight * 2,
         color: "#fff"
       },
       fff: {
         color: "#fff"
+      },
+      hint: {
+        color: "rgba(255,255,255,0.3)"
       }
     };
     
@@ -135,14 +140,14 @@ class Login extends React.Component {
                     value={this.state.userName} 
                     onChange={this.handleChange}
                     className="loginInput"
-                    hintStyle={styles.fff}
+                    hintStyle={styles.hint}
                   />
                   <br/>
                   <TextField
                     hintText="Password"  
                     type="password"
                     className="loginInput"
-                    hintStyle={styles.fff}
+                    hintStyle={styles.hint}
                   />
             </div>
 
