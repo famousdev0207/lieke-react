@@ -60,7 +60,7 @@ class Admin extends Component {
       <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div style={styles.main}>
           <AppBar
-            title={<img src={LogoImg} className="logo"/>}
+            title={<img src={LogoImg} className="logoAdmin"/>}
           >
             <Notifications />
           </AppBar>

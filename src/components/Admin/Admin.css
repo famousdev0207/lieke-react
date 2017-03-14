@@ -1,9 +1,12 @@
-.logo {
-	max-height: 50px;
+.logoAdmin {
+	max-height: 70px;
+	max-width: 120px;
 	width: auto;
 	display: inline-block;
 	position: relative;
-	top: 13%;
+	top: 10%;
+	margin-right: auto;
+	margin-left: calc(50% - 60px) !important; 
 }
 .main {
 	background: #fff !important;
@@ -20,6 +23,7 @@
 	max-width: 25vw;
 	min-width: 340px;
 	margin: 50px;
+	margin-top: 20px;
 	padding: 20px;
 }
 .chartCard {
