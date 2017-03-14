@@ -110,7 +110,8 @@ class Login extends React.Component {
         top: 0,
         left: 0,
         paddingTop: '20vh',
-        height: window.innerHeight * 2,
+        height: window.innerHeight,
+        overflow: 'hidden',
         color: "#fff"
       },
       fff: {
