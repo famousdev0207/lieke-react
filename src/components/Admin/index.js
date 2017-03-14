@@ -6,12 +6,13 @@ import Drawer from 'material-ui/Drawer';
 
 
 //Comoponents
-import Navigation from './Navigation';
-import Notifications from './Notifications';
+import Navigation from './Navigation'
+import Notifications from './Notifications'
 import TopBar from './TopBar'
 import StudentCard from './StudentCard'
 import GameCard from './GameCard'
 import ChartCard from './ChartCard'
+import MenuTop from './MenuTop'
 
 //styles
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -81,8 +82,10 @@ class Admin extends Component {
           </div>
 
           <Drawer open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
-            <MenuItem>Menu Item</MenuItem>
-            <MenuItem>Menu Item 2</MenuItem>
+            <MenuTop />
+            <MenuItem>Profile</MenuItem>
+            <MenuItem>Settings</MenuItem>
+            <MenuItem>Log out</MenuItem>
           </Drawer>
          
         </div>

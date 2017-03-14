@@ -5,7 +5,7 @@ import App from './components/App';
 import Game from './components/Game';
 import Blocks from './components/Blocks';
 import Admin from './components/Admin';
-
+import Login from './components/Login';
 
 //redux
 //import { syncHistoryWithStore } from 'react-router-redux';
@@ -29,12 +29,30 @@ const mapDispatchToProps = (dispatch) => {
 class RootRoute extends React.Component {
 
   render() {
+    function requireAuth(nextState, replace) {
+        
+        //DEVELOPMENT MODE, GOES STRAIGHT TO APP, UNCOMMENT STATMENT BELOW FOR PRODUCTION
+
+      if (!this.props.user.logged) {
+        replace({
+          pathname: '/login'
+        })
+      }
+    }
+    function requireAuthAdmin(nextState, replace) {
+      if ((!this.props.user.logged) || (this.props.user.user.name !== "admin")) {
+        replace({
+          pathname: '/login'
+        })
+      }
+    }
     return (
       <Router history={browserHistory}>
-          <Route path="/" component={App} />
-          <Route path="/game" component={Game} />
-          <Route path="/blocks" component={Blocks} />
-          <Route path="/admin" component={Admin} />
+          <Route path="/" component={App} onEnter={requireAuth.bind(this)}/>
+          <Route path="/login" component={Login} />
+          <Route path="/game" component={Game} onEnter={requireAuth.bind(this)} />
+          <Route path="/blocks" component={Blocks} onEnter={requireAuth.bind(this)} />
+          <Route path="/admin" component={Admin} onEnter={requireAuthAdmin.bind(this)} />
       </Router>
     );
   }
