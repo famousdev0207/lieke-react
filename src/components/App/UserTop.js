@@ -9,6 +9,7 @@ import Avatar from 'material-ui/Avatar';
 
 //Images
 import UserImg from '../../images/max.jpg';
+import LogoImg from '../../images/logo.png';
 
 //redux
 import { connect } from 'react-redux';
@@ -38,6 +39,9 @@ class UserTop extends React.Component {
   render() {
     return (
    		<Paper zDepth={1} className="userCard">
+        <div className="logoMain">
+          <img src={LogoImg} className="logo"/>
+        </div>
 		    <Avatar
 	          src={UserImg}
 	          size={150}

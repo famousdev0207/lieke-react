@@ -1,3 +1,11 @@
+.logoMain {
+	width: 100%;
+}
+.logoMain .logo {
+	max-height: 70px;
+	width: auto;
+	margin: 10px;
+}
 .appMain {
 	font-family: Roboto, sans-serif;
 	width: 100%;

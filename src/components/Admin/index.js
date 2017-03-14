@@ -23,7 +23,8 @@ import store from '../../store'
 
 //style 
 import './Admin.css';
-
+//Images
+import LogoImg from '../../images/logo.png';
 
 
 function mapStateToProps(state) {
@@ -59,7 +60,7 @@ class Admin extends Component {
       <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div style={styles.main}>
           <AppBar
-            title="AllRounders"
+            title={<img src={LogoImg} className="logo"/>}
           >
             <Notifications />
           </AppBar>
@@ -67,7 +68,7 @@ class Admin extends Component {
       
           <div className="cards">
               <StudentCard />
-          
+
               <GameCard />
 
           </div>
