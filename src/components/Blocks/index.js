@@ -52,20 +52,20 @@ class App extends Component {
         <div>
           <div className="grid">
               <div className="row">
-                <div className="square"><h3 className="word">Word1</h3></div>
-                <div className="square"><h3 className="word">Word2</h3></div>
+                <div className="square one"><h3 className="word">Word1</h3></div>
+                <div className="square two"><h3 className="word">Word3</h3></div>
               </div>
               <div className="row">
-                <div className="square"><h3 className="word">Word3</h3></div>
-                <div className="square"><h3 className="word">Word4</h3></div>
+                <div className="square two"><h3 className="word">Word1</h3></div>
+                <div className="square one"><h3 className="word">Word4</h3></div>
               </div>
               <div className="row">
-                <div className="square"><h3 className="word">Word5</h3></div>
-                <div className="square"><h3 className="word">Word6</h3></div>
+                <div className="square two"><h3 className="word">Word4</h3></div>
+                <div className="square one"><h3 className="word">Word2</h3></div>
               </div>
               <div className="row">
-                <div className="square"><h3 className="word">Word7</h3></div>
-                <div className="square"><h3 className="word">Word8</h3></div>
+                <div className="square one"><h3 className="word">Word3</h3></div>
+                <div className="square two"><h3 className="word">Word2</h3></div>
               </div>
           </div>
           <div className="backBtn">

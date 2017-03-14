@@ -26,7 +26,7 @@ class UserTasks extends React.Component {
     this.setState({open: false});
   };
   goToTask = () => {
-    browserHistory.push('/blocks');
+    browserHistory.push('/game');
   }
   render() {
 
