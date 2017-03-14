@@ -60,7 +60,8 @@ class Login extends React.Component {
     this.state = {
       showLoading: false,
       userName: '',
-      loading: false
+      loading: false,
+      height: window.innerHeight
     }
     this.handleChange = this.handleChange.bind(this);
   }
@@ -110,7 +111,7 @@ class Login extends React.Component {
         top: 0,
         left: 0,
         paddingTop: '20vh',
-        height: window.innerHeight,
+        height: this.state.height,
         overflow: 'hidden',
         color: "#fff"
       },
