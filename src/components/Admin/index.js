@@ -2,6 +2,8 @@ import React, { PropTypes, Component } from 'react';
 
 import {AppBar, IconButton, IconMenu, MenuItem} from 'material-ui';
 import classnames from 'classnames';
+import Drawer from 'material-ui/Drawer';
+
 
 //Comoponents
 import Navigation from './Navigation';
@@ -39,9 +41,13 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 class Admin extends Component {
-  // static propTypes = {}
-  // static defaultProps = {}
-  // state = {}
+  constructor(props) {
+    super(props);
+    this.state = {open: false};
+  }
+
+  handleToggle = () => this.setState({open: !this.state.open});
+  handleClose = () => this.setState({open: false});
 
   render() {
     const muiTheme = getMuiTheme({}, {
@@ -60,6 +66,7 @@ class Admin extends Component {
       <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div style={styles.main}>
           <AppBar
+            onLeftIconButtonTouchTap={this.handleToggle}
             title={<img src={LogoImg} className="logoAdmin"/>}
           >
             <Notifications />
@@ -72,6 +79,11 @@ class Admin extends Component {
               <GameCard />
 
           </div>
+
+          <Drawer open={this.state.open} docked={false} onRequestChange={(open) => this.setState({open})}>
+            <MenuItem>Menu Item</MenuItem>
+            <MenuItem>Menu Item 2</MenuItem>
+          </Drawer>
          
         </div>
        </MuiThemeProvider>
