@@ -6,15 +6,19 @@ import TextField from 'material-ui/TextField';
 import Avatar from 'material-ui/Avatar';
 import {List, ListItem} from 'material-ui/List';
 
+//Components
+import CreateGame from './CreateGame'
+
 //Images
 import UserImg from '../../images/max.jpg';
 
 //Icons
+import GameIcon from 'material-ui/svg-icons/hardware/videogame-asset';
 import IconButton from 'material-ui/IconButton';
-import UserIcon from 'material-ui/svg-icons/social/person';
+import AddGame from 'material-ui/svg-icons/action/note-add';
 import DeleteIcon from 'material-ui/svg-icons/action/delete-forever';
 
-export default class UserManager extends React.Component {
+export default class GameManager extends React.Component {
   state = {
     open: false,
   };
@@ -38,11 +42,11 @@ export default class UserManager extends React.Component {
 
     return (
       <div>
-        <IconButton tooltip="Manage students" onTouchTap={this.handleOpen}>
-            <UserIcon color='#005C97'/>
+        <IconButton tooltip="Manage games" onTouchTap={this.handleOpen}>
+            <AddGame color='#005C97'/>
         </IconButton>
         <Dialog
-          title="Manage students"
+          title="Manage games"
           actions={actions}
           modal={false}
           open={this.state.open}
@@ -66,43 +70,25 @@ export default class UserManager extends React.Component {
           }}
         >
           <div>
-              <TextField
-                hintText="Student's email"
-                className="inviteInput"
-              />
-              <FlatButton
-                label="Invite"
-                primary={true}
-                keyboardFocused={true}
-              />
+              <CreateGame />
           </div>
-          <List>
-            <ListItem
-              primaryText="Brendan Lim"
-              rightIcon={<DeleteIcon />}
-              leftAvatar={<Avatar src={UserImg} />}
-            />
-            <ListItem
-              primaryText="Eric Hoffman"
-              rightIcon={<DeleteIcon />}
-              leftAvatar={<Avatar src={UserImg} />}
-            />
-            <ListItem
-              primaryText="Grace Ng"
-              rightIcon={<DeleteIcon />}
-              leftAvatar={<Avatar src={UserImg} />}
-            />
-            <ListItem
-              primaryText="Kerem Suer"
-              rightIcon={<DeleteIcon />}
-              leftAvatar={<Avatar src={UserImg} />}
-            />
-            <ListItem
-              primaryText="Raquel Parrado"
-              rightIcon={<DeleteIcon />}
-              leftAvatar={<Avatar src={UserImg} />}
-            />
-          </List>
+         <List>
+          <ListItem
+            primaryText="Game"
+            rightIcon={<DeleteIcon />}
+            leftAvatar={<GameIcon />}
+          />
+          <ListItem
+            primaryText="Game"
+            rightIcon={<DeleteIcon />}
+            leftAvatar={<GameIcon />}
+          />
+          <ListItem
+            primaryText="Game"
+            rightIcon={<DeleteIcon />}
+            leftAvatar={<GameIcon />}
+          />
+        </List>
          </Dialog>
       </div>
     );

@@ -47,7 +47,7 @@ class UserTop extends React.Component {
 	          size={150}
             className="avatar"
 	        />
-	        <h3 className="userName">Max Prokopenko</h3>
+	        <h3 className="userName">Pena Trumpiniemi</h3>
           <h1> <CountUp start={0} end={195} /> </h1>
           <p className="score"> MY SCORE </p>
 		</Paper>

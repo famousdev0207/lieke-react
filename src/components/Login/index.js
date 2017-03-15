@@ -110,7 +110,7 @@ class Login extends React.Component {
         postion: 'fixed',
         top: 0,
         left: 0,
-        paddingTop: '20vh',
+        paddingTop: '30vh',
         height: this.state.height,
         overflow: 'hidden',
         color: "#fff"
@@ -130,10 +130,6 @@ class Login extends React.Component {
           
             <img src={Logo} className="logoLogin"/>
           <form onSubmit={this.userLogin.bind(this)}>
-            <CardTitle
-              title="Login"
-              style={styles.fff}
-            />
             {this.state.loading ? <CircularProgress size={40} thickness={7} color={'#fff'}/> : ''}
             <CardText>
               <div>

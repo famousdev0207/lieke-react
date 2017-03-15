@@ -18,7 +18,7 @@ import AddIcon from 'material-ui/svg-icons/content/add-circle-outline';
 const GameCard = () => (
   <Paper className="studentCard" zDepth={1} >
    <div className="studentHeader">
-     <div className="add"><AddIcon /></div>
+     
      <h1 className="studentNum"> <CountUp start={0} end={3} /> </h1>
      <div className="mystudents">MY GAMES</div>
     </div>

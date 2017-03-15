@@ -8,6 +8,7 @@
 .logoLogin {
 	max-width: 200px;
 	height: auto;
+	filter:         drop-shadow(5px 5px 5px #222); 
 }
 .loginBtn, .loginInput {
 	color: #fff !important; 

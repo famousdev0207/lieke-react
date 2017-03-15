@@ -6,11 +6,11 @@ import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-mo
 
 //Icons
 import UserIcon from 'material-ui/svg-icons/social/person';
-import AddGame from 'material-ui/svg-icons/action/note-add';
 import DashboardIcon from 'material-ui/svg-icons/action/view-module';
 
 //COmponents
 import UserManager from './UserManager'
+import GameManager from './GameManager'
 
 //Material UI
 import MenuItem from 'material-ui/MenuItem';
@@ -40,9 +40,8 @@ export default class TopBar extends React.Component {
         </ToolbarGroup>
         <ToolbarGroup>
           <UserManager />
-          <IconButton tooltip="Manage Games">
-            <AddGame color='#005C97'/>
-          </IconButton>
+          <GameManager />
+           
          
           
           <ToolbarSeparator />
