@@ -9,7 +9,10 @@ import UserIcon from 'material-ui/svg-icons/social/person';
 import AddGame from 'material-ui/svg-icons/action/note-add';
 import DashboardIcon from 'material-ui/svg-icons/action/view-module';
 
+//COmponents
+import UserManager from './UserManager'
 
+//Material UI
 import MenuItem from 'material-ui/MenuItem';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -36,9 +39,7 @@ export default class TopBar extends React.Component {
           
         </ToolbarGroup>
         <ToolbarGroup>
-          <IconButton tooltip="Manage students">
-            <UserIcon color='#005C97'/>
-          </IconButton>
+          <UserManager />
           <IconButton tooltip="Manage Games">
             <AddGame color='#005C97'/>
           </IconButton>

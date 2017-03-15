@@ -40,11 +40,12 @@ class RootRoute extends React.Component {
       }
     }
     function requireAuthAdmin(nextState, replace) {
-      if ((!this.props.user.logged) || (this.props.user.user.name !== "admin")) {
+        //DEVELOPMENT MODE, GOES STRAIGHT TO APP, UNCOMMENT STATMENT BELOW FOR PRODUCTION
+      /*if ((!this.props.user.logged) || (this.props.user.user.name !== "admin")) {
         replace({
           pathname: '/login'
         })
-      }
+      }*/
     }
     return (
       <Router history={browserHistory}>
