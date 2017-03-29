@@ -107,14 +107,39 @@ class App extends Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div className="mainContainer">
-
+          <GameDialog open={false} /> 
+          <div className="topContainer">
             <Container>
                 <Row>
-                  <Col md={12} xs={12}>
-                    <Lifes lifes={3}/>
+                  <Col md={12} xs={12} className="timer">
+                    <Timer />
                   </Col>
                 </Row>
             </Container>
+            <Container>
+                <Row>
+                  <Col md={12} xs={12}>
+                    <Lifes lifes={this.state.lifes}/>
+                  </Col>
+                </Row>
+            </Container>
+            <Container>
+              <Row>
+                <Col md={12} xs={12}>
+                  <Topic topic="sport" />
+                </Col>
+                <Col md={12} xs={12}>
+                  <Frase text="Some _____ for test" />
+                </Col>
+              </Row>
+            </Container>
+          </div>
+          <div className="bottomContainer">
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
+          </div>
         </div>
        </MuiThemeProvider>
     );

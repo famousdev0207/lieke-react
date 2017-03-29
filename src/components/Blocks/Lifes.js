@@ -9,6 +9,10 @@ import EmptyLife from 'material-ui/svg-icons/action/favorite-border';
 import {red500} from 'material-ui/styles/colors';
 import IconButton from 'material-ui/IconButton';
 
+
+//Heart
+import Heart from '../../images/heart.png'
+
 //Styles
 import './Lifes.css'
 
@@ -38,9 +42,9 @@ const Lifes = (props) => {
 	      style={styles.large}
 	    >
           {props.lifes >= 1 ? (
-            <Life color={red500}/>
+            <img src={Heart} />
           ) : (
-            <EmptyLife color={red500}/>
+            <img src={Heart} className="emptyHeart"/>
           )}
 
       </IconButton>
@@ -49,9 +53,9 @@ const Lifes = (props) => {
         style={styles.large}
       >
           {props.lifes >= 2 ? (
-            <Life color={red500}/>
+            <img src={Heart} />
           ) : (
-            <EmptyLife color={red500}/>
+            <img src={Heart} className="emptyHeart"/>
           )}
 
       </IconButton>
@@ -60,9 +64,9 @@ const Lifes = (props) => {
         style={styles.large}
       >
           {props.lifes >= 3 ? (
-            <Life color={red500}/>
+            <img src={Heart} />
           ) : (
-            <EmptyLife color={red500}/>
+            <img src={Heart} className="emptyHeart"/>
           )}
 
       </IconButton>
