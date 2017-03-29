@@ -53,21 +53,29 @@ class App extends Component {
     super(props);
     this.state = {
       lifes: 3,
-      secondsElapsed: 2
+      secondsElapsed: 2,
+      winOpen: false,
+      points: 0
     };
   };
 
   wordChoose = () => {
     let lifes = this.state.lifes - 1;
-    console.log("new lifes " + lifes);
     this.setState({
       lifes: lifes
     })
-  };
+  }
+
+  winDialog = () => {
+    let points = this.state.lifes * (30 - this.state.secondsElapsed) * 150;
+    this.setState({
+      winOpen: true,
+      points: points
+    })
+  }
 
   tick = () => {
     if ((this.state.secondsElapsed < 30) && (this.state.lifes >=1)) {
-      console.log(this.state.secondsElapsed);
       this.setState({secondsElapsed: this.state.secondsElapsed + 1});
     }
     else {
@@ -94,7 +102,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("render");
     const { className, ...props } = this.props;
     const muiTheme = getMuiTheme({}, {
       palette: {
@@ -107,7 +114,7 @@ class App extends Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div className="mainContainer">
-          <GameDialog open={false} /> 
+          <GameDialog open={this.state.winOpen} points={this.state.points}/> 
           <div className="topContainer">
             <Container>
                 <Row>
@@ -137,16 +144,16 @@ class App extends Component {
               <Container className="bottomContainer">
                 <Row>
                   <Col md={6} xs={6}>
-                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                    <RaisedButton label="LOSE" className="wordButton" onTouchTap={this.wordChoose}/>          
                   </Col>
                   <Col md={6} xs={6}>
-                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                    <RaisedButton label="LOSE" className="wordButton" onTouchTap={this.wordChoose}/>          
                   </Col>
                   <Col md={6} xs={6}>
-                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                    <RaisedButton label="LOSE" className="wordButton" onTouchTap={this.wordChoose}/>          
                   </Col>
                   <Col md={6} xs={6}>
-                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                    <RaisedButton label="WIN" className="wordButton" onTouchTap={this.winDialog}/>          
                   </Col>
                 </Row>
               </Container>

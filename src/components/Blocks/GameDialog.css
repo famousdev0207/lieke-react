@@ -1,0 +1,16 @@
+.dialogBox {
+	text-align: center !important;
+	font-family: 'Quantico', sans-serif !important;
+}
+.badge {
+	width: 150px;
+	height: auto;
+}
+.title, .dialogBox h3  {
+	font-family: 'Quantico', sans-serif !important;
+}
+.share {
+	width: 50vw;
+	height: auto;
+	margin-top: 10px;
+}
