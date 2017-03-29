@@ -109,13 +109,7 @@ class App extends Component {
         <div className="mainContainer">
           <GameDialog open={false} /> 
           <div className="topContainer">
-            <Container>
-                <Row>
-                  <Col md={12} xs={12} className="timer">
-                    <Timer />
-                  </Col>
-                </Row>
-            </Container>
+           
             <Container>
                 <Row>
                   <Col md={12} xs={12}>
