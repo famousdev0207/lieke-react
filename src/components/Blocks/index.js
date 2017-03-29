@@ -107,9 +107,8 @@ class App extends Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
         <div className="mainContainer">
-          <GameDialog open={false} /> 
-          <div className="topContainer">
-                <Container>
+
+            <Container>
                 <Row>
                   <Col md={12} xs={12}>
                     <Lifes lifes={3}/>
