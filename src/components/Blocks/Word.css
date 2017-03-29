@@ -1,0 +1,14 @@
+.wordBox {
+	margin: 0 !important;
+	height: 10vh;
+	width: 50vw;
+	padding: 0 !important;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #fff !important;
+	color: #005C97 !important;
+	font-family: 'Quantico', sans-serif !important;
+	text-transform: uppercase;
+	font-weight: 900; 
+}

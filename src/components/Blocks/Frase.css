@@ -1,0 +1,10 @@
+.fraseBox {
+	height: 30vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #fff !important;
+	font-size: 2.3em;
+	font-family: 'Quantico', sans-serif !important;
+	
+}

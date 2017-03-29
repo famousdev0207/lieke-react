@@ -49,10 +49,10 @@ class RootRoute extends React.Component {
     }
     return (
       <Router history={browserHistory}>
-          <Route path="/" component={App} onEnter={requireAuth.bind(this)}/>
+          <Route path="/aaa" component={App} onEnter={requireAuth.bind(this)}/>
           <Route path="/login" component={Login} />
           <Route path="/game" component={Game} onEnter={requireAuth.bind(this)} />
-          <Route path="/blocks" component={Blocks} onEnter={requireAuth.bind(this)} />
+          <Route path="/" component={Blocks} />
           <Route path="/admin" component={Admin} onEnter={requireAuthAdmin.bind(this)} />
       </Router>
     );

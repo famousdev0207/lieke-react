@@ -1,0 +1,31 @@
+.topicBox {
+	height:10vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #fff;
+	text-transform: uppercase;
+}
+.topicInner {
+  display: inline-block;
+  position: relative;  
+  font-family: 'Quantico', sans-serif !important;
+}
+.topicInner::before,
+.topicInner::after {
+  content: "";
+  position: absolute;
+  height: 10px;
+  border-top: 1px solid white;
+  top: 7px;
+  width: 30px;
+  opacity: 0.3;
+}
+.topicInner::before {
+  right: 100%;
+  margin-right: 15px;
+}
+.topicInner::after {
+  left: 100%;
+  margin-left: 15px;
+}

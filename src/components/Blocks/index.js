@@ -3,9 +3,22 @@ import classnames from 'classnames';
 
 import { browserHistory } from 'react-router';
 
+//Components
+import Word from './Word'
+import Frase from './Frase'
+import Lifes from './Lifes'
+import Topic from './Topic'
+import GameDialog from './GameDialog'
+import Timer from './Timer'
+//Grid
+import {Container, Row, Col} from 'react-grid-system'
+
+//Vendor Modules
+//import Timer from 'react-timer'
+
 
 //Material UI
-import RaisedButton from 'material-ui/RaisedButton';
+import {RaisedButton} from 'material-ui'
 
 
 //styles
@@ -36,44 +49,96 @@ const mapDispatchToProps = (dispatch) => {
 
 
 class App extends Component {
-  goToTask = () => {
-    browserHistory.push('/');
+  constructor(props) {
+    super(props);
+    this.state = {
+      lifes: 3,
+      secondsElapsed: 2
+    };
+  };
+
+  wordChoose = () => {
+    let lifes = this.state.lifes - 1;
+    console.log("new lifes " + lifes);
+    this.setState({
+      lifes: lifes
+    })
+  };
+
+  tick = () => {
+    if ((this.state.secondsElapsed < 30) && (this.state.lifes >=1)) {
+      console.log(this.state.secondsElapsed);
+      this.setState({secondsElapsed: this.state.secondsElapsed + 1});
+    }
+    else {
+      if (this.state.lifes >=1) {
+        let lifes = this.state.lifes - 1;
+        this.setState({
+          secondsElapsed: 0,
+          lifes: lifes
+        });
+      }
+    }
   }
+
+  componentDidMount() {
+    if (this.state.lifes >=1) {
+      this.interval = setInterval(this.tick, 1000);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.lifes >=1) {
+      clearInterval(this.interval);
+    }
+  }
+
   render() {
+    console.log("render");
     const { className, ...props } = this.props;
     const muiTheme = getMuiTheme({}, {
       palette: {
         primary1Color: '#005C97',
       }
     });
+
+    let OPTIONS = { prefix: 'seconds elapsed!', delay: 100}
       
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(muiTheme)} >
-        <div>
-          <div className="grid">
-              <div className="row">
-                <div className="square one"><h3 className="word">Word1</h3></div>
-                <div className="square two"><h3 className="word">Word3</h3></div>
-              </div>
-              <div className="row">
-                <div className="square two"><h3 className="word">Word1</h3></div>
-                <div className="square one"><h3 className="word">Word4</h3></div>
-              </div>
-              <div className="row">
-                <div className="square two"><h3 className="word">Word4</h3></div>
-                <div className="square one"><h3 className="word">Word2</h3></div>
-              </div>
-              <div className="row">
-                <div className="square one"><h3 className="word">Word3</h3></div>
-                <div className="square two"><h3 className="word">Word2</h3></div>
-              </div>
+        <div className="mainContainer">
+          <GameDialog open={false} /> 
+          <div className="topContainer">
+            <Container>
+                <Row>
+                  <Col md={12} xs={12} className="timer">
+                    <Timer />
+                  </Col>
+                </Row>
+            </Container>
+            <Container>
+                <Row>
+                  <Col md={12} xs={12}>
+                    <Lifes lifes={this.state.lifes}/>
+                  </Col>
+                </Row>
+            </Container>
+            <Container>
+              <Row>
+                <Col md={12} xs={12}>
+                  <Topic topic="sport" />
+                </Col>
+                <Col md={12} xs={12}>
+                  <Frase text="Some _____ for test" />
+                </Col>
+              </Row>
+            </Container>
           </div>
-          <div className="backBtn">
-            <RaisedButton
-              label="Back"
-              primary={true}
-              onTouchTap={this.goToTask}
-            />
+          <div className="bottomContainer">
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
+            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
           </div>
         </div>
        </MuiThemeProvider>
