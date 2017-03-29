@@ -7,6 +7,7 @@
   background: -webkit-linear-gradient(to left, #005C97 , #363795); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to left, #005C97 , #363795);
   height: 80vh;
+  overflow: visible !important;
 }
 .bottomContainer {
 	height: 20vh;
