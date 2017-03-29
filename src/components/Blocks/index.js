@@ -133,13 +133,26 @@ class App extends Component {
                 </Col>
               </Row>
             </Container>
+            
+              <Container className="bottomContainer">
+                <Row>
+                  <Col md={6} xs={6}>
+                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                  </Col>
+                  <Col md={6} xs={6}>
+                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                  </Col>
+                  <Col md={6} xs={6}>
+                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                  </Col>
+                  <Col md={6} xs={6}>
+                    <RaisedButton label="Test" className="wordButton" onTouchTap={this.wordChoose}/>          
+                  </Col>
+                </Row>
+              </Container>
+          
           </div>
-          <div className="bottomContainer">
-            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
-            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
-            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
-            <RaisedButton children={<Word word="Test wrong" />} className="wordButton" onTouchTap={this.wordChoose}/>          
-          </div>
+          
         </div>
        </MuiThemeProvider>
     );

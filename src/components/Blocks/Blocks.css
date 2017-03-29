@@ -6,18 +6,15 @@
   background: #005C97; /* fallback for old browsers */
   background: -webkit-linear-gradient(to left, #005C97 , #363795); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to left, #005C97 , #363795);
-  height: 80vh;
+  height: 100vh;
   overflow: visible !important;
 }
 .bottomContainer {
-	height: 20vh;
-	width: 100%;
-	position: absolute;
-	bottom: 0;
+	
+	position: absolute !important;
+	bottom: 20px;
 	left: 0; 
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+
 
 }
 .timer {
@@ -26,16 +23,7 @@
   align-items: center;
   font-family: 'Quantico', sans-serif !important;
 }
-.wordButton span{
-	height: 10vh !important;
+.wordButton {
+	margin-top: 10px !important;
+	width: 100%;
 }
-svg {
-  display: block;
-  margin: 50px auto;
-}
-
-#loader 
-{ fill: #0088cc }
-
-#border 
-{ fill: #00517a }
