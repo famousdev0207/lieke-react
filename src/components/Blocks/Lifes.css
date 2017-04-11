@@ -4,11 +4,15 @@
 	align-items: center;
 	margin-top: 70px;
 	z-index: 10;
-	overflow: visible !important;
 }
 .life {
 	width: 50px;
 	height: 50px;
+}
+´.heart {
+	transition: all 3.2s ease-in-out;
+   -moz-transition: all 3.2s ease-in-out;
+   -webkit-transition: all 3.2s ease-in-out;
 }
 .emptyHeart {
 	opacity: 0.3;

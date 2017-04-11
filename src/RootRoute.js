@@ -6,6 +6,7 @@ import Game from './components/Game';
 import Blocks from './components/Blocks';
 import Admin from './components/Admin';
 import Login from './components/Login';
+import Teacher from './components/Teacher';
 
 //redux
 //import { syncHistoryWithStore } from 'react-router-redux';
@@ -53,6 +54,7 @@ class RootRoute extends React.Component {
           <Route path="/login" component={Login} />
           <Route path="/game" component={Game} onEnter={requireAuth.bind(this)} />
           <Route path="/" component={Blocks} />
+          <Route path="/home" component={Teacher} />
           <Route path="/admin" component={Admin} onEnter={requireAuthAdmin.bind(this)} />
       </Router>
     );

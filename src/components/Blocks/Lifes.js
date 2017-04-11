@@ -42,9 +42,9 @@ const Lifes = (props) => {
 	      style={styles.large}
 	    >
           {props.lifes >= 1 ? (
-            <img src={Heart} />
+            <img src={Heart} className="heart" />
           ) : (
-            <img src={Heart} className="emptyHeart"/>
+            <img src={Heart} className="heart emptyHeart"/>
           )}
 
       </IconButton>
@@ -53,9 +53,9 @@ const Lifes = (props) => {
         style={styles.large}
       >
           {props.lifes >= 2 ? (
-            <img src={Heart} />
+            <img src={Heart} className="heart" />
           ) : (
-            <img src={Heart} className="emptyHeart"/>
+            <img src={Heart} className="heart emptyHeart"/>
           )}
 
       </IconButton>
@@ -64,9 +64,9 @@ const Lifes = (props) => {
         style={styles.large}
       >
           {props.lifes >= 3 ? (
-            <img src={Heart} />
+            <img src={Heart} className="heart" />
           ) : (
-            <img src={Heart} className="emptyHeart"/>
+            <img src={Heart} className="heart emptyHeart"/>
           )}
 
       </IconButton>
