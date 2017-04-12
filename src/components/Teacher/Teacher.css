@@ -7,3 +7,23 @@
 .inputDesc {
 	width: 100% !important;
 }
+.avatar {
+	margin-top: 20px;
+	border-radius: 50%;
+    box-shadow: 0 0 0 3px #fff, 0 0 0 4px #999, 0 2px 5px 4px rgba(0,0,0,.2);
+}
+
+.score {
+	margin-top: -20px;
+	font-size: 10px; 
+}
+.userInfo {
+	text-align: center;
+}
+.menuSide {
+	background-color: #005C97 !important;
+	color: #fff !important; 
+}
+.menuItem {
+	color: #fff !important;
+}

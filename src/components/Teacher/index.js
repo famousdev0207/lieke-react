@@ -2,12 +2,23 @@ import React, { PropTypes, Component } from 'react';
 import classnames from 'classnames';
 
 //Material UI
-import {AppBar, IconButton, IconMenu, MenuItem, Drawer, Dialog, FlatButton, TextField, ListItem, List} from 'material-ui';
+import {AppBar, IconButton, IconMenu, MenuItem, Drawer, Dialog, FlatButton, TextField, ListItem, List, Avatar} from 'material-ui';
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
+
 
 //fetching
 import axios from 'axios';
 
+import CountUp from 'react-countup';
+
 //Components
+
+//Images
+import TeacherImg from '../../images/teacher.jpg';
+
+
+//Grid
+import {Container, Row, Col} from 'react-grid-system'
 
 
 //styles
@@ -56,6 +67,7 @@ class Teacher extends Component {
       name: '',
       spots: [],
       games: [],
+      adr: [],
       gameDialogOpen: false,
       currentGame: {
         name: "",
@@ -79,7 +91,8 @@ class Teacher extends Component {
         lng: -0.08040660000006028
       },
       addSound: 'STOPPED',
-      clickSound: 'STOPPED'
+      clickSound: 'STOPPED',
+      myGamesOpen: false
     };
     this.fetchMyGames();
   }
@@ -90,22 +103,40 @@ class Teacher extends Component {
     let that = this;
     axios.get("http://localhost:8000/api/v1/game")
     .then(function (response) {
-      console.log(response);
+      //console.log(response);
       let games = response.data.games;
-      console.log(games);
+      //console.log(games);
       Object.keys(games).forEach(function(key,index) {
-        console.log(games[key]);
+        //console.log(games[key]);
         let coords = JSON.parse(games[key].coords);
         let game = games[key];
+        game['coords'] = coords;
         
         spots.push(coords);
+        that.fetchAddress(coords.lat, coords.lng);
         allgames.push(game);
 
-        console.log(spots);
+        //console.log(spots);
         that.setState({
           games: allgames,
           spots: spots
         });
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  fetchAddress(lat, lng) {
+    console.log("get address");
+    let that = this;
+    let addresses = this.state.adr;
+    axios.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+','+lng)
+    .then(function (response) {
+      //console.log(response);
+      addresses.push(response.data.results["0"].formatted_address);
+      that.setState({
+        adr: addresses
       });
     })
     .catch(function (error) {
@@ -290,11 +321,11 @@ class Teacher extends Component {
     this.setState({
       clickSound: 'PLAYING'
     });
-    console.log(index);
+    
     let currentGame = this.state.games[index];
     currentGame['tasks'] = JSON.parse(currentGame['tasks']);
 
-    console.log(currentGame);
+    
     
     this.setState({
       currentGame: currentGame,
@@ -322,6 +353,26 @@ class Teacher extends Component {
     this.setState({
       gameDialogOpen: false,
       currentGame: currentGame
+    });
+  };
+  //--------------------------
+
+  //My games dialog-------
+  handleOpenMyGames = (index) => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    
+    this.setState({
+      myGamesOpen: true
+    });
+  };
+  handleCloseMyGames = () => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    this.setState({
+      myGamesOpen: false,
     });
   };
   //--------------------------
@@ -366,6 +417,20 @@ class Teacher extends Component {
         onTouchTap={this.postGame}
       />,
     ];
+    const actionsMyGames = [
+      <FlatButton
+        label="Delete"
+        disabled={true}
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleCloseMyGames}
+      />,
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={this.handleCloseMyGames}
+      />
+    ];
     const actionsGameDialog = [
       <FlatButton
         label="Close"
@@ -402,6 +467,21 @@ class Teacher extends Component {
             playStatus={this.state.clickSound}
             onFinishedPlaying={() => this.handleStopSound('clickSound')} 
           />
+          <Drawer open={true} containerClassName="menuSide">
+            <div className="userInfo">
+              <Avatar
+                src={TeacherImg}
+                size={150}
+                className="avatar"
+              />
+              <h3 >Mr. Teacher</h3>
+              <h1><CountUp start={0} end={743} /> </h1>
+              <p className="score"> TEACHER POINTS </p>
+            </div>
+            <MenuItem className="menuItem" onClick={() => this.setState({myGamesOpen: true})}>My games</MenuItem>
+            <MenuItem className="menuItem">My locations</MenuItem>
+            <MenuItem className="menuItem">My groups</MenuItem>
+          </Drawer>
           <Gmaps
             params={params}
             ref='Gmaps'
@@ -447,6 +527,7 @@ class Teacher extends Component {
           <Dialog
             title={this.state.currentGame.name}
             actions={actionsGameDialog}
+            autoScrollBodyContent={true}
             modal={true}
             open={this.state.gameDialogOpen}
             onRequestClose={this.handleGameDialogClose}
@@ -459,6 +540,35 @@ class Teacher extends Component {
                   />
                 )}
               </List>
+            </div>
+          </Dialog>
+          <Dialog
+            title={"My Games"}
+            actions={actionsMyGames}
+            autoScrollBodyContent={true}
+            modal={true}
+            open={this.state.myGamesOpen}
+            onRequestClose={this.handleCloseMyGames}
+          >
+            <div>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHeaderColumn>Name</TableHeaderColumn>
+                      <TableHeaderColumn>Location</TableHeaderColumn>
+                      <TableHeaderColumn>Status</TableHeaderColumn>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {this.state.games.map((game, index) =>
+                      <TableRow key={index}>
+                        <TableRowColumn>{game.name}</TableRowColumn>
+                        <TableRowColumn>{this.state.adr[index]}</TableRowColumn>
+                        <TableRowColumn>Active</TableRowColumn>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
             </div>
           </Dialog>
         </div>
