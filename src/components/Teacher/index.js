@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import classnames from 'classnames';
 
 //Material UI
-import {AppBar, IconButton, IconMenu, MenuItem, Drawer, Dialog, FlatButton, TextField, ListItem, List, Avatar} from 'material-ui';
+import {AppBar, IconButton, IconMenu, SelectField, MenuItem, Drawer, Dialog, FlatButton, TextField, ListItem, List, Avatar} from 'material-ui';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 
@@ -32,6 +32,10 @@ import { connect } from 'react-redux';
 //import { startShift } from '../../actions/shiftAction';
 import { bindActionCreators } from 'redux';
 import store from '../../store'
+
+//Slides
+import SwipeableViews from 'react-swipeable-views';
+import Pagination from './Pagination';
 
 //Map
 import {Gmaps, Marker, InfoWindow, Circle} from 'react-gmaps';
@@ -63,12 +67,30 @@ class Teacher extends Component {
     this.state = {
       width: '500px',
       height: '500px',
+      index: 0,
       open: false,
       name: '',
       spots: [],
       games: [],
       adr: [],
+      newRadius: '',
+      groups: [
+        {
+          name: '',
+          users: []
+        }
+      ],
+      newUser: {
+        email: ''
+      },
+      selectedGroup: 0,
+      viewDisabled: true,
+      myGroupsOpen: false,
+      addGroupOpen: false,
+      addStudentOpen: false,
+      myGroupStudentsOpen: false,
       gameDialogOpen: false,
+      showRadius: false,
       currentGame: {
         name: "",
         id: null,
@@ -83,18 +105,27 @@ class Teacher extends Component {
       },
       sentences: [
         {
-          value: ''
+          value: '',
+          1: '',
+          2: '',
+          3: '',
+          4: ''
         },
       ],
       coords: {
         lat: 51.5258541,
         lng: -0.08040660000006028
       },
+      newGroup: {
+        name: '',
+        desc: '',
+      },
       addSound: 'STOPPED',
       clickSound: 'STOPPED',
       myGamesOpen: false
     };
     this.fetchMyGames();
+    this.fetchGroups();
   }
   fetchMyGames() {
     console.log("mygames");
@@ -121,6 +152,19 @@ class Teacher extends Component {
           games: allgames,
           spots: spots
         });
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  fetchGroups() {
+    console.log("get my groups");
+    let that = this;
+    axios.get("http://localhost:8000/api/v1/group")
+    .then(function (response) {
+      that.setState({
+        groups: response.data.groups
       });
     })
     .catch(function (error) {
@@ -182,21 +226,26 @@ class Teacher extends Component {
             ]
     });
     
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
+    this.currentLocation();
+  }
+
+  currentLocation = () => {
+     navigator.geolocation.getCurrentPosition(
+        (position) => {},
+        (error) => alert(error.message),
+        {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+      );
+      this.watchID = navigator.geolocation.watchPosition((position) => {
+        //var lastPosition = JSON.stringify(position);
+        //console.log(position);
         let pos = {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
-        that.setState({
+        this.setState({
           coords: pos
         });
-      }, function() {
-        console.log("GPS ERROR");   
       });
-    } else {
-      console.log("GPS ERROR");
-    }
   }
  
   onDragEnd(e) {
@@ -222,6 +271,7 @@ class Teacher extends Component {
     });
     this.handleOpen();
   }
+
   handleChange = (name, event) => {
     let sentences = this.state.sentences;
     sentences[name.i].value = event.target.value;
@@ -229,9 +279,44 @@ class Teacher extends Component {
       sentences: sentences
     });
   }
+  handleChangeGroup = (event, index, value) => this.setState({group_id: value});
+
+  handleChangeOption = (name, option, event) => {
+    let sentences = this.state.sentences;
+    sentences[name.i][option] = event.target.value;
+    this.setState({
+      sentences: sentences
+    });
+  }
+  handleChangeStudentEmail = (event) => {
+    let newUser = this.state.newUser;
+    newUser.email = event.target.value;
+    this.setState({
+      newUser: newUser
+    });
+  }
+  handleChangeNewGroupName = (event) => {
+    let newGroup = this.state.newGroup;
+    newGroup.name = event.target.value;
+    this.setState({
+      newGroup: newGroup
+    });
+  }
+  handleChangeNewGroupDesc = (event) => {
+    let newGroup = this.state.newGroup;
+    newGroup.desc = event.target.value;
+    this.setState({
+      newGroup: newGroup
+    });
+  }
   handleChangeName = (event) => {
     this.setState({
       name: event.target.value
+    });
+  }
+  handleChangeRadius = (event) => {
+    this.setState({
+      newRadius: event.target.value
     });
   }
   
@@ -244,13 +329,18 @@ class Teacher extends Component {
       value: ''
     };
     sentences.push(newSentence);
+    let index = this.state.index;
+    index++;
     this.setState({
-      sentences: sentences
+      sentences: sentences,
+      index: index
     });
   };
   postGame = () => {
     let that = this;
     let name = this.state.name;
+    let radius = this.state.newRadius;
+    let group_id = this.state.group_id;
     let tasks = JSON.stringify(this.state.sentences);
     let spots = this.state.spots;
     let coords = spots[spots.length - 1];
@@ -258,7 +348,9 @@ class Teacher extends Component {
     axios.post('http://localhost:8000/api/v1/game', {
       name: name,
       tasks: tasks,
-      coords: coords
+      coords: coords,
+      radius: radius,
+      group_id: group_id
     })
     .then(function (response) {
       console.log(response);
@@ -273,7 +365,65 @@ class Teacher extends Component {
       addSound: 'PLAYING'
     });
   }
+  addGroup = () => {
+    let that = this;
+    let name = this.state.newGroup.name;
+    let desc = this.state.newGroup.desc;
+    axios.post('http://localhost:8000/api/v1/group', {
+      type: 'NEW_GROUP',
+      name: name,
+      desc: desc
+    })
+    .then(function (response) {
+      console.log(response);
+      that.fetchGroups();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    this.handleAddGroupClose();
+    this.setState({
+      addSound: 'PLAYING'
+    });
+  }
 
+  addStudent = () => {
+    let that = this;
+    let email = this.state.newUser.email;
+    let group = this.state.groups[this.state.selectedGroup].id;
+    axios.post('http://localhost:8000/api/v1/group', {
+      type: 'NEW_USER',
+      group_id: group,
+      email: email
+    })
+    .then(function (response) {
+      console.log(response);
+      that.fetchGroups();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    this.handleAddStudentClose();
+    this.setState({
+      addSound: 'PLAYING'
+    });
+  }
+
+  setGroupSelected = (selectedRows) => {
+      console.log(selectedRows);
+      if(selectedRows.length >= 1) {
+        this.setState({
+            selectedGroup: selectedRows[0],
+            viewDisabled: false
+        });
+      }
+      else {
+        this.setState({
+            viewDisabled: true
+        });
+      }
+      
+  }
   // postSpot = (id) => {
   //   let spots = this.state.spots;
   //   let coords = spots[spots.length - 1];
@@ -317,6 +467,18 @@ class Teacher extends Component {
   };
 
   //Selected game dialog-------
+  showRadius = (index) => {
+    let currentGame = this.state.games[index];
+
+    let radius = {
+      radius: currentGame.radius,
+      coords: currentGame.coords
+    }
+     this.setState({
+        radius: radius,
+        showRadius: true
+     });
+  }
   openGameModal = (index) => {
     this.setState({
       clickSound: 'PLAYING'
@@ -324,7 +486,6 @@ class Teacher extends Component {
     
     let currentGame = this.state.games[index];
     currentGame['tasks'] = JSON.parse(currentGame['tasks']);
-
     
     
     this.setState({
@@ -377,18 +538,108 @@ class Teacher extends Component {
   };
   //--------------------------
 
+  //My groups dialog-------
+  handleOpenMyGroups = (index) => {
+    this.fetchGroups();
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    this.setState({
+      myGroupsOpen: true
+    });
+  };
+  handleCloseMyGroups = () => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    this.setState({
+      myGroupsOpen: false,
+    });
+  };
+
+  //--------------------------
+   //Ädd group dialog-------
+  handleAddGroupOpen = (index) => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    
+    this.setState({
+      addGroupOpen: true
+    });
+  };
+  handleAddGroupClose = () => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    this.setState({
+      addGroupOpen: false,
+    });
+  };
+  //--------------------------
+    //Ädd student dialog-------
+  handleAddStudentOpen = (index) => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    
+    this.setState({
+      addStudentOpen: true
+    });
+  };
+  handleAddStudentClose = () => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    this.setState({
+      addStudentOpen: false,
+    });
+  };
+  //--------------------------
+  //My group students dialog-------
+  handleOpenMyGroupStudents = (index) => {
+    //this.handleCloseMyGroups();
+    //this.fetchGroups();
+    console.log("open group students");
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    this.setState({
+      myGroupStudentsOpen: true
+    });
+  };
+  handleCloseMyGroupStudents = () => {
+    this.setState({
+      clickSound: 'PLAYING'
+    });
+    this.setState({
+      myGroupStudentsOpen: false,
+      selectedGroup: 0
+    });
+  };
+  //--------------------------
+
   handleStopSound = (sound) => {
     let stop = {};
     stop[sound] = 'STOPPED'; 
     this.setState(stop);
   }
 
-  componentDidMount(x,y,z){
+  handleChangeIndex = (index) => {
+    this.setState({
+      index,
+    });
+  };
+  
+  componentDidMount(x,y,z) {
    this.setState({
     width: window.innerWidth+'px',
       height: window.innerHeight+'px'
     });
-   
+  }
+
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
   }
 
   render() {
@@ -406,7 +657,7 @@ class Teacher extends Component {
         onTouchTap={this.handleAdd}
       />,
       <FlatButton
-        label="Cancel"
+        label="Close"
         primary={true}
         onTouchTap={this.handleCancel}
       />,
@@ -415,6 +666,32 @@ class Teacher extends Component {
         primary={true}
         keyboardFocused={true}
         onTouchTap={this.postGame}
+      />,
+    ];
+    const addGroupActions = [
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={this.handleAddGroupClose}
+      />,
+      <FlatButton
+        label="Create"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.addGroup}
+      />,
+    ];
+     const addStudentActions = [
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={this.handleAddStudentClose}
+      />,
+      <FlatButton
+        label="Add student"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.addStudent}
       />,
     ];
     const actionsMyGames = [
@@ -426,9 +703,53 @@ class Teacher extends Component {
         onTouchTap={this.handleCloseMyGames}
       />,
       <FlatButton
-        label="Cancel"
+        label="Close"
         primary={true}
         onTouchTap={this.handleCloseMyGames}
+      />
+    ];
+    const actionsMyGroups = [
+      <FlatButton
+        label="View"
+        primary={true}
+        onTouchTap={this.handleOpenMyGroupStudents}
+        disabled={this.state.viewDisabled}
+      />,
+      <FlatButton
+        label="Add group"
+        primary={true}
+        onTouchTap={this.handleAddGroupOpen}
+      />,
+      <FlatButton
+        label="Delete"
+        disabled={true}
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleCloseMyGroups}
+      />,
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={this.handleCloseMyGroups}
+      />
+    ];
+     const actionsMyGroupStudents = [
+      <FlatButton
+        label="Add student"
+        primary={true}
+        onTouchTap={this.handleAddStudentOpen}
+      />,
+      <FlatButton
+        label="Delete"
+        disabled={true}
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.handleCloseMyGroupStudents}
+      />,
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={this.handleCloseMyGroupStudents}
       />
     ];
     const actionsGameDialog = [
@@ -451,6 +772,8 @@ class Teacher extends Component {
         draggable={false}
         onDragEnd={this.onDragEnd} 
         onClick={() => this.openGameModal(index)}
+        onMouseOver={() => this.showRadius(index)}
+        onMouseOut={() => this.setState({showRadius: false})}
       />
     );
 
@@ -478,9 +801,8 @@ class Teacher extends Component {
               <h1><CountUp start={0} end={743} /> </h1>
               <p className="score"> TEACHER POINTS </p>
             </div>
-            <MenuItem className="menuItem" onClick={() => this.setState({myGamesOpen: true})}>My games</MenuItem>
-            <MenuItem className="menuItem">My locations</MenuItem>
-            <MenuItem className="menuItem">My groups</MenuItem>
+            <MenuItem className="menuItem" onClick={this.handleOpenMyGames}>My games</MenuItem>
+            <MenuItem className="menuItem" onClick={this.handleOpenMyGroups}>My groups</MenuItem>
           </Drawer>
           <Gmaps
             params={params}
@@ -494,6 +816,17 @@ class Teacher extends Component {
             onClick={this.onClick}
             onMapCreated={this.onMapCreated}>
             {listSpots}
+            <Marker
+              lat={this.state.coords.lat}
+              lng={this.state.coords.lng}
+              draggable={false}
+              clickable={false}
+            />
+            {this.state.showRadius && <Circle
+              lat={this.state.radius.coords.lat}
+              lng={this.state.radius.coords.lng}
+              radius={this.state.radius.radius}
+            /> }
           </Gmaps>
           <Dialog
             title="New Game"
@@ -502,28 +835,76 @@ class Teacher extends Component {
             open={this.state.open}
             onRequestClose={this.handleClose}
           >
-            <div>
+            <div className="answerInput">
               <TextField
                 hintText="Game name"
                 floatingLabelText="Name"
                 value={this.state.name}
                 onChange={this.handleChangeName}
-              />
+              /><br/>
+              <TextField
+                hintText="Radius game is available"
+                floatingLabelText="Radius (meters)"
+                value={this.state.newRadius}
+                onChange={this.handleChangeRadius}
+              /><br />
+              <SelectField
+                floatingLabelText="Group"
+                value={this.state.group_id}
+                onChange={this.handleChangeGroup}
+              >
+                {this.state.groups.map((group, index) =>
+                  <MenuItem value={group.id} key={index} primaryText={group.name} />
+                )}
+              </SelectField>
+              <SwipeableViews enableMouseEvents index={this.state.index} onChangeIndex={this.handleChangeIndex} disabled={true}>
               {this.state.sentences.map((sentence, i) => {
                 return (
-                    <TextField
-                      hintText="Sentence text"
-                      key={i}
-                      value={sentence.value}
-                      floatingLabelText="Add sentence"
-                      className="input"
-                      onChange={this.handleChange.bind(this, {i})}
-                    />
+                      <div className="slideAddAnswer" key={i}>
+                        <TextField
+                          hintText="Sentence text"
+                          key={i}
+                          value={sentence.value}
+                          floatingLabelText="Add sentence"
+                          className="input"
+                          onChange={this.handleChange.bind(this, {i})}
+                        />
+                        <TextField
+                          hintText="Option 1"
+                          value={sentence[1]}
+                          floatingLabelText="Add answer option"
+                          onChange={this.handleChangeOption.bind(this, {i}, 1)}
+                        /><br />
+                        <TextField
+                          hintText="Option 1"
+                          value={sentence[2]}
+                          floatingLabelText="Add answer option"
+                          onChange={this.handleChangeOption.bind(this, {i}, 2)}
+                        /><br />
+                        <TextField
+                          hintText="Option 1"
+                          value={sentence[3]}
+                          floatingLabelText="Add answer option"
+                          onChange={this.handleChangeOption.bind(this, {i}, 3)}
+                        /><br />
+                        <TextField
+                          hintText="Option 1"
+                          value={sentence[4]}
+                          floatingLabelText="Add answer option"
+                          onChange={this.handleChangeOption.bind(this, {i}, 4)}
+                        /><br />
+                      </div>
                 );
               })}
-             
+              </SwipeableViews>
+              <Pagination
+                dots={this.state.sentences.length}
+                index={this.state.index}
+                onChangeIndex={this.handleChangeIndex}
+              />
             </div>
           </Dialog>
+          
           <Dialog
             title={this.state.currentGame.name}
             actions={actionsGameDialog}
@@ -536,7 +917,27 @@ class Teacher extends Component {
               <List>
                 {this.state.currentGame.tasks.map((task, index) =>
                   <ListItem key={index}
-                    primaryText={task.value} 
+                    primaryText={task.value}
+                    initiallyOpen={false}
+                    primaryTogglesNestedList={true}
+                    nestedItems={[
+                      <ListItem
+                        key={1}
+                        primaryText={task['1']}
+                      />,
+                      <ListItem
+                        key={2}
+                        primaryText={task['2']}
+                      />,
+                      <ListItem
+                        key={3}
+                        primaryText={task['3']}
+                      />,
+                      <ListItem
+                        key={4}
+                        primaryText={task['4']}
+                      />,
+                    ]}
                   />
                 )}
               </List>
@@ -569,6 +970,108 @@ class Teacher extends Component {
                     )}
                   </TableBody>
                 </Table>
+            </div>
+          </Dialog>
+          <Dialog
+            title={"My groups"}
+            actions={actionsMyGroups}
+            autoScrollBodyContent={true}
+            modal={true}
+            open={this.state.myGroupsOpen}
+            onRequestClose={this.handleCloseMyGroups}
+          >
+            <div>
+                <Table onRowSelection={this.setGroupSelected}>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHeaderColumn>Name</TableHeaderColumn>
+                      <TableHeaderColumn>Description</TableHeaderColumn>
+                      <TableHeaderColumn>Status</TableHeaderColumn>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody deselectOnClickaway={false}>
+                    {this.state.groups.map((group, index) =>
+                      <TableRow key={index} rowNumber={index}>
+                        <TableRowColumn>{group.name}</TableRowColumn>
+                        <TableRowColumn>{group.desc}</TableRowColumn>
+                        <TableRowColumn>Active</TableRowColumn>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+            </div>
+          </Dialog>
+          <Dialog
+            title="New Group"
+            actions={addGroupActions}
+            modal={true}
+            open={this.state.addGroupOpen}
+            onRequestClose={this.handleAddGroupClose}
+          >
+            <div>
+              <TextField
+                hintText="New group name"
+                floatingLabelText="Group name"
+                value={this.state.newGroup.name}
+                onChange={this.handleChangeNewGroupName}
+              />
+              <TextField
+                hintText="New group description"
+                floatingLabelText="Group description"
+                value={this.state.newGroup.desc}
+                fullWidth={true}
+                onChange={this.handleChangeNewGroupDesc}
+              />
+              
+             
+            </div>
+          </Dialog>
+          <Dialog
+            title={"Group students"}
+            actions={actionsMyGroupStudents}
+            autoScrollBodyContent={true}
+            modal={true}
+            open={this.state.myGroupStudentsOpen}
+            onRequestClose={this.handleCloseMyGroupStudents}
+          >
+            <div>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHeaderColumn>Name</TableHeaderColumn>
+                      <TableHeaderColumn>Email</TableHeaderColumn>
+                      <TableHeaderColumn>Added</TableHeaderColumn>
+                      <TableHeaderColumn>Status</TableHeaderColumn>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {this.state.groups[this.state.selectedGroup].users.map((user, index) =>
+                      <TableRow key={index}>
+                        <TableRowColumn>{user.name}</TableRowColumn>
+                        <TableRowColumn>{user.email}</TableRowColumn>
+                        <TableRowColumn>{user.created_at}</TableRowColumn>
+                        <TableRowColumn>Active</TableRowColumn>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+            </div>
+          </Dialog>
+          <Dialog
+            title="Add Student"
+            actions={addStudentActions}
+            modal={true}
+            open={this.state.addStudentOpen}
+            onRequestClose={this.handleAddStudentClose}
+          >
+            <div>
+              <TextField
+                hintText="Student email"
+                floatingLabelText="Email"
+                value={this.state.newUser.email}
+                onChange={this.handleChangeStudentEmail}
+              />
+           
             </div>
           </Dialog>
         </div>

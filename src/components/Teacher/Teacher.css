@@ -27,3 +27,9 @@
 .menuItem {
 	color: #fff !important;
 }
+.answerInput {
+	overflow: auto;
+}
+.slideAddAnswer {
+	padding: 15px;
+}

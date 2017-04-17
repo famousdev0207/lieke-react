@@ -33,6 +33,8 @@
     "react-sound": "^0.5.2",
     "react-stonecutter": "^0.3.4",
     "react-svg-gauge": "^1.0.4",
+    "react-swipeable-views": "^0.12.0",
+    "react-swipeable-views-utils": "^0.12.0",
     "react-tap-event-plugin": "^2.0.1",
     "react-timer": "^1.0.2",
     "react-webcam": "0.0.14",

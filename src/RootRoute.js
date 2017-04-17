@@ -2,6 +2,7 @@ import React from 'react';
 import { Router, Route, browserHistory, hashHistory, useRouterHistory, createHistory } from 'react-router';
 
 import App from './components/App';
+import Play from './components/Play';
 import Game from './components/Game';
 import Blocks from './components/Blocks';
 import Admin from './components/Admin';
@@ -50,7 +51,7 @@ class RootRoute extends React.Component {
     }
     return (
       <Router history={browserHistory}>
-          <Route path="/aaa" component={App} onEnter={requireAuth.bind(this)}/>
+          <Route path="/play" component={Play}/>
           <Route path="/login" component={Login} />
           <Route path="/game" component={Game} onEnter={requireAuth.bind(this)} />
           <Route path="/" component={Blocks} />
