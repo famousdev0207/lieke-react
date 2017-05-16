@@ -55,7 +55,7 @@ class RootRoute extends React.Component {
           <Route path="/login" component={Login} />
           <Route path="/game" component={Game} onEnter={requireAuth.bind(this)} />
           <Route path="/" component={Blocks} />
-          <Route path="/home" component={Teacher} />
+          <Route path="/teacher" component={Teacher} />
           <Route path="/admin" component={Admin} onEnter={requireAuthAdmin.bind(this)} />
       </Router>
     );

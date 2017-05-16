@@ -2,7 +2,10 @@ import React, { PropTypes, Component } from 'react';
 import classnames from 'classnames';
 
 //Material UI
-import {AppBar, IconButton, IconMenu, SelectField, MenuItem, Drawer, Dialog, FlatButton, TextField, ListItem, List, Avatar} from 'material-ui';
+import {AppBar, Subheader, Checkbox, IconButton, IconMenu, SelectField, MenuItem, 
+   Step,
+  Stepper,
+  StepLabel, Drawer, Dialog, FlatButton, TextField, ListItem, List, Avatar} from 'material-ui';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 
 
@@ -72,6 +75,7 @@ class Teacher extends Component {
       name: '',
       spots: [],
       games: [],
+      stepIndex: 0,
       adr: [],
       newRadius: '',
       groups: [
@@ -109,7 +113,8 @@ class Teacher extends Component {
           1: '',
           2: '',
           3: '',
-          4: ''
+          4: '',
+          correct: 0
         },
       ],
       coords: {
@@ -122,17 +127,34 @@ class Teacher extends Component {
       },
       addSound: 'STOPPED',
       clickSound: 'STOPPED',
-      myGamesOpen: false
+      myGamesOpen: false,
+      user: {
+        name: ''
+      }
     };
+    this.fetchUser();
     this.fetchMyGames();
     this.fetchGroups();
+  }
+  fetchUser() {
+    console.log("fetching user");
+    let that = this;
+    axios.get("/api/v1/user")
+    .then(function (response) {
+      that.setState({
+        user: response.data.user
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
   }
   fetchMyGames() {
     console.log("mygames");
     let spots = [];
     let allgames = [];
     let that = this;
-    axios.get("http://localhost:8000/api/v1/game")
+    axios.get("/api/v1/game")
     .then(function (response) {
       //console.log(response);
       let games = response.data.games;
@@ -161,7 +183,7 @@ class Teacher extends Component {
   fetchGroups() {
     console.log("get my groups");
     let that = this;
-    axios.get("http://localhost:8000/api/v1/group")
+    axios.get("/api/v1/group")
     .then(function (response) {
       that.setState({
         groups: response.data.groups
@@ -175,7 +197,7 @@ class Teacher extends Component {
     console.log("get address");
     let that = this;
     let addresses = this.state.adr;
-    axios.get("http://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+','+lng)
+    axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+','+lng)
     .then(function (response) {
       //console.log(response);
       addresses.push(response.data.results["0"].formatted_address);
@@ -345,7 +367,7 @@ class Teacher extends Component {
     let spots = this.state.spots;
     let coords = spots[spots.length - 1];
     coords = JSON.stringify(coords);
-    axios.post('http://localhost:8000/api/v1/game', {
+    axios.post('/api/v1/game', {
       name: name,
       tasks: tasks,
       coords: coords,
@@ -355,6 +377,23 @@ class Teacher extends Component {
     .then(function (response) {
       console.log(response);
       that.fetchMyGames();
+      let taskDefault = [
+        {
+          value: '',
+          1: '',
+          2: '',
+          3: '',
+          4: '',
+          correct: 0
+        },
+      ];
+      that.setState({
+        name: '',
+        newRadius: '',
+        group_id: '',
+        sentences: taskDefault,
+        stepIndex: 0
+      });
       //that.postSpot(response.data.last_insert_id);
     })
     .catch(function (error) {
@@ -369,7 +408,8 @@ class Teacher extends Component {
     let that = this;
     let name = this.state.newGroup.name;
     let desc = this.state.newGroup.desc;
-    axios.post('http://localhost:8000/api/v1/group', {
+
+    axios.post('/api/v1/group', {
       type: 'NEW_GROUP',
       name: name,
       desc: desc
@@ -377,6 +417,13 @@ class Teacher extends Component {
     .then(function (response) {
       console.log(response);
       that.fetchGroups();
+      let newGroupDefault = {
+        name: '',
+        desc: '',
+      };
+      that.setState({
+        newGroup: newGroupDefault
+      });
     })
     .catch(function (error) {
       console.log(error);
@@ -391,7 +438,7 @@ class Teacher extends Component {
     let that = this;
     let email = this.state.newUser.email;
     let group = this.state.groups[this.state.selectedGroup].id;
-    axios.post('http://localhost:8000/api/v1/group', {
+    axios.post('/api/v1/group', {
       type: 'NEW_USER',
       group_id: group,
       email: email
@@ -402,6 +449,12 @@ class Teacher extends Component {
     })
     .catch(function (error) {
       console.log(error);
+      let newUserDefault = {
+        email: ''
+      };
+      that.setState({
+        newUser: newUserDefault
+      });
     });
     this.handleAddStudentClose();
     this.setState({
@@ -424,12 +477,20 @@ class Teacher extends Component {
       }
       
   }
+  setCorrect = (i, id) => {
+
+      let sentences = this.state.sentences;
+      sentences[i].correct = id;
+      this.setState({
+        sentences: sentences
+      });
+  }
   // postSpot = (id) => {
   //   let spots = this.state.spots;
   //   let coords = spots[spots.length - 1];
   //   console.log(coords);
   //   coords = JSON.stringify(coords);
-  //   axios.post('http://localhost:8000/api/v1/spot', {
+  //   axios.post('/api/v1/spot', {
   //     coords: coords,
   //     game_id: id
   //   })
@@ -630,6 +691,10 @@ class Teacher extends Component {
       index,
     });
   };
+
+  stepNext = () => {
+    this.setState({stepIndex: this.state.stepIndex+1})
+  }
   
   componentDidMount(x,y,z) {
    this.setState({
@@ -666,6 +731,19 @@ class Teacher extends Component {
         primary={true}
         keyboardFocused={true}
         onTouchTap={this.postGame}
+      />,
+    ];
+    const actions0 = [
+      <FlatButton
+        label="Next"
+        primary={true}
+        keyboardFocused={true}
+        onTouchTap={this.stepNext}
+      />,
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={this.handleCancel}
       />,
     ];
     const addGroupActions = [
@@ -797,7 +875,7 @@ class Teacher extends Component {
                 size={150}
                 className="avatar"
               />
-              <h3 >Mr. Teacher</h3>
+              <h3 >{this.state.user.name}</h3>
               <h1><CountUp start={0} end={743} /> </h1>
               <p className="score"> TEACHER POINTS </p>
             </div>
@@ -830,78 +908,130 @@ class Teacher extends Component {
           </Gmaps>
           <Dialog
             title="New Game"
-            actions={actions}
+            actions={this.state.stepIndex == 0 ? actions0 : actions}
             modal={true}
             open={this.state.open}
             onRequestClose={this.handleClose}
+            autoScrollBodyContent={true}
+            autoDetectWindowHeight={true}
           >
             <div className="answerInput">
-              <TextField
-                hintText="Game name"
-                floatingLabelText="Name"
-                value={this.state.name}
-                onChange={this.handleChangeName}
-              /><br/>
-              <TextField
-                hintText="Radius game is available"
-                floatingLabelText="Radius (meters)"
-                value={this.state.newRadius}
-                onChange={this.handleChangeRadius}
-              /><br />
-              <SelectField
-                floatingLabelText="Group"
-                value={this.state.group_id}
-                onChange={this.handleChangeGroup}
-              >
-                {this.state.groups.map((group, index) =>
-                  <MenuItem value={group.id} key={index} primaryText={group.name} />
-                )}
-              </SelectField>
-              <SwipeableViews enableMouseEvents index={this.state.index} onChangeIndex={this.handleChangeIndex} disabled={true}>
-              {this.state.sentences.map((sentence, i) => {
-                return (
-                      <div className="slideAddAnswer" key={i}>
-                        <TextField
-                          hintText="Sentence text"
-                          key={i}
-                          value={sentence.value}
-                          floatingLabelText="Add sentence"
-                          className="input"
-                          onChange={this.handleChange.bind(this, {i})}
-                        />
-                        <TextField
-                          hintText="Option 1"
-                          value={sentence[1]}
-                          floatingLabelText="Add answer option"
-                          onChange={this.handleChangeOption.bind(this, {i}, 1)}
-                        /><br />
-                        <TextField
-                          hintText="Option 1"
-                          value={sentence[2]}
-                          floatingLabelText="Add answer option"
-                          onChange={this.handleChangeOption.bind(this, {i}, 2)}
-                        /><br />
-                        <TextField
-                          hintText="Option 1"
-                          value={sentence[3]}
-                          floatingLabelText="Add answer option"
-                          onChange={this.handleChangeOption.bind(this, {i}, 3)}
-                        /><br />
-                        <TextField
-                          hintText="Option 1"
-                          value={sentence[4]}
-                          floatingLabelText="Add answer option"
-                          onChange={this.handleChangeOption.bind(this, {i}, 4)}
-                        /><br />
-                      </div>
-                );
-              })}
-              </SwipeableViews>
-              <Pagination
-                dots={this.state.sentences.length}
-                index={this.state.index}
-                onChangeIndex={this.handleChangeIndex}
-              />
+              <Stepper activeStep={this.state.stepIndex}>
+                <Step>
+                  <StepLabel>Basic information</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Create tasks</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Publish</StepLabel>
+                </Step>
+              </Stepper>
+              {this.state.stepIndex == 0 && 
+                          <div>
+                            <TextField
+                              hintText="Game name"
+                              floatingLabelText="Name"
+                              value={this.state.name}
+                              onChange={this.handleChangeName}
+                            /><br/>
+                            <TextField
+                              hintText="Radius game is available"
+                              floatingLabelText="Radius (meters)"
+                              value={this.state.newRadius}
+                              onChange={this.handleChangeRadius}
+                            /><br />
+                            <SelectField
+                              floatingLabelText="Group"
+                              value={this.state.group_id}
+                              onChange={this.handleChangeGroup}
+                            >
+                              {this.state.groups.map((group, index) =>
+                                <MenuItem value={group.id} key={index} primaryText={group.name} />
+                              )}
+                            </SelectField>
+                          </div>
+              }
+              { this.state.stepIndex == 1 && 
+                <div>
+                  <SwipeableViews enableMouseEvents index={this.state.index} onChangeIndex={this.handleChangeIndex} disabled={true}>
+                  {this.state.sentences.map((sentence, i) => {
+                    return (
+                          <div className="slideAddAnswer" key={i}>
+                              <TextField
+                                hintText="Sentence text"
+                                key={i}
+                                value={sentence.value}
+                                floatingLabelText="Add sentence"
+                                className="input"
+                                onChange={this.handleChange.bind(this, {i})}
+                              />
+                                    
+                              <List>
+                                <ListItem className="listItemOption" primaryText={
+                                    <TextField
+                                      hintText="Option 1"
+                                      value={sentence[1]}
+                                      floatingLabelText="Add answer option"
+                                      onChange={this.handleChangeOption.bind(this, {i}, 1)}
+                                    />
+                                } leftCheckbox={
+                                  <Checkbox
+                                    checked={this.state.sentences[i].correct == 1 ? true : false}
+                                    onCheck={()=>this.setCorrect(i, 1)}
+                                  />
+                                } />
+                                <ListItem className="listItemOption" primaryText={
+                                  <TextField
+                                      hintText="Option 1"
+                                      value={sentence[2]}
+                                      floatingLabelText="Add answer option"
+                                      onChange={this.handleChangeOption.bind(this, {i}, 2)}
+                                    />
+                                } leftCheckbox={
+                                  <Checkbox
+                                    checked={this.state.sentences[i].correct == 2 ? true : false}
+                                    onCheck={()=>this.setCorrect(i, 2)}
+                                  />
+                                } />
+                                <ListItem className="listItemOption" primaryText={
+                                  <TextField
+                                      hintText="Option 1"
+                                      value={sentence[3]}
+                                      floatingLabelText="Add answer option"
+                                      onChange={this.handleChangeOption.bind(this, {i}, 3)}
+                                    />
+                                } leftCheckbox={
+                                  <Checkbox
+                                    checked={this.state.sentences[i].correct == 3 ? true : false}
+                                    onCheck={()=>this.setCorrect(i, 3)}
+                                  />
+                                } />
+                                <ListItem className="listItemOption" primaryText={
+                                  <TextField
+                                      hintText="Option 1"
+                                      value={sentence[4]}
+                                      floatingLabelText="Add answer option"
+                                      onChange={this.handleChangeOption.bind(this, {i}, 4)}
+                                    />
+                                } leftCheckbox={
+                                  <Checkbox
+                                    checked={this.state.sentences[i].correct == 4 ? true : false}
+                                    onCheck={()=>this.setCorrect(i, 4)}
+                                  />
+                                } />
+                              </List>
+                          </div>
+                    );
+                  })}
+                  </SwipeableViews>
+                  <Pagination
+                    dots={this.state.sentences.length}
+                    index={this.state.index}
+                    onChangeIndex={this.handleChangeIndex}
+                  />
+              </div>
+            }
             </div>
           </Dialog>
           

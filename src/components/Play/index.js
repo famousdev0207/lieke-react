@@ -2,7 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import classnames from 'classnames';
 
 //Material UI
-import {IconButton, Dialog, FlatButton, Paper,  TextField, ListItem, List, Avatar} from 'material-ui';
+import {IconButton, Subheader, Dialog, FlatButton, Paper,  TextField, ListItem, List, Avatar} from 'material-ui';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Slider from 'material-ui/Slider';
@@ -46,6 +46,9 @@ import Sound from 'react-sound';
 import AddSound from '../../sounds/add.mp3';
 import ClickSound from '../../sounds/click.mp3'
 
+//Img
+import Leaderboard from '../../images/leaderboard.png';
+
 
 
 function mapStateToProps(state) {
@@ -68,7 +71,7 @@ class Play extends Component {
     this.state = {
       width: '500px',
       height: '500px',
-      open: true,
+      open: false,
       name: '',
       spots: [],
       playing: false,
@@ -97,6 +100,9 @@ class Play extends Component {
       newUser: {
         email: 'max.prokopenko@hotmail.com'
       },
+      gamesAvbl: [
+        false
+      ],
       showRadius: false,
       currentGame: {
         name: "",
@@ -123,22 +129,57 @@ class Play extends Component {
         name: '',
         desc: '',
       },
+      top: [ 
+        {
+          result: 0,
+          name: ''
+        }
+      ],
+      result: 0,
       addSound: 'STOPPED',
       clickSound: 'STOPPED',
-      myGamesOpen: false
+      myGamesOpen: false,
+      tab: 1,
     };
     this.fetchUser();
   }
   fetchUser() {
     console.log("fetching user");
     let that = this;
-    axios.get("http://localhost:8000/api/v1/user")
+    axios.get("/api/v1/user")
     .then(function (response) {
       that.setState({
         user: response.data.user
       });
       console.log(response.data.user.groups[0].id);
       that.fetchMyGames(response.data.user.groups[0].id);
+      that.fetchTop();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  fetchTop() {
+    console.log("fetching top");
+    let that = this;
+    axios.get("/api/v1/result/" + this.state.user.groups[0].id)
+    .then(function (response) {
+      that.setState({
+        top: response.data.top
+      });      
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
+  fetchMyTotal() {
+    console.log("fetching my total");
+    let that = this;
+    axios.get("/api/v1/result/" + this.state.user.groups[0].id)
+    .then(function (response) {
+      that.setState({
+        top: response.data.top
+      });      
     })
     .catch(function (error) {
       console.log(error);
@@ -149,7 +190,7 @@ class Play extends Component {
     let spots = [];
     let allgames = [];
     let that = this;
-    axios.get("http://localhost:8000/api/v1/game/" + id)
+    axios.get("/api/v1/game/" + id)
     .then(function (response) {
       let games = response.data.games;
       //console.log(games);
@@ -252,6 +293,9 @@ class Play extends Component {
         this.setState({
           coords: pos
         });
+
+        let gamesAvbl = [];
+
         for (var i = 0; i < this.state.games.length; i++) {
           let lat1 = this.state.games[i].coords.lat;
           let lng1 = this.state.games[i].coords.lng;
@@ -261,13 +305,21 @@ class Play extends Component {
           let dist = this.getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2);
 
           if (dist < this.state.games[i].radius) {
-             let currentGame = this.state.games[i];
-              this.setState({
-                open: true,
-                currentGame: currentGame,
-              });
+             // let currentGame = this.state.games[i];
+             //  this.setState({
+             //    currentGame: currentGame,
+             //  });
+             gamesAvbl[i] = true; 
+          }
+          else {
+            gamesAvbl[i] = false;
           }
         }
+
+        this.setState({
+          gamesAvbl: gamesAvbl
+        });
+        
       });
   }
   getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
@@ -347,28 +399,87 @@ class Play extends Component {
     });
   };
 
-  startGame = (id) => {
-    console.log(this.state.currentGame);
+ handleChangeTab = (value) => {
     this.setState({
-      open: false,
-      playing: true
+      tab: value,
     });
+  };
+  startGame = (id) => {
+    if(this.state.gamesAvbl[id]) {
+      console.log("start " + id);
+      let currentGame = this.state.games[id];
+      //console.log(currentGame);
+      this.setState({
+        currentGame: currentGame,
+        playing: true,
+        tab: 1
+      });
+    }
   }
 
 
-  answerClick = () => {
+  answerClick = (id) => {
+    let that = this;
     let index = this.state.index;
+    let result = this.state.result;
+
+    if (id == this.state.currentGame.tasks[index].correct) {
+      console.log('correct');
+      result = result + 100;
+      this.setState({
+        result: result
+      });
+    }
+    else {
+      console.log("wrong");
+    }
+
+
     if(index < this.state.currentGame.tasks.length-1) {
       index++;
     }
     else {
       console.log("end of game");
+      setTimeout(function() {
+        console.log(that.state.result);
+        that.postResult();
+        that.fetchTop();
+      }, 1000);
       this.setState({
-        playing: false
+        playing: false,
       });
+      index = 0;
     }
     this.setState({
       index: index
+    });
+  }
+
+  postResult = () => {
+    let that = this;
+    let game_id = this.state.currentGame.id;
+    let user_id = this.state.user.id;
+    let result = this.state.result;
+    let info = JSON.stringify({
+      status: 'not available'
+    });
+    axios.post('/api/v1/result', {
+      user_id: user_id,
+      game_id: game_id,
+      info: info,
+      result: result
+    })
+    .then(function (response) {
+      console.log(response);
+      that.setState({
+        result: 0
+      });
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+    this.setState({
+      addSound: 'PLAYING'
     });
   }
 
@@ -437,8 +548,11 @@ class Play extends Component {
             playStatus={this.state.clickSound}
             onFinishedPlaying={() => this.handleStopSound('clickSound')} 
           />
-          <Tabs>
-            <Tab label="MAP" className="mapTab">
+          <Tabs 
+            value={this.state.tab}
+            onChange={this.handleChangeTab}
+          >
+            <Tab label="MAP" className="mapTab" value={1}>
                   <Gmaps
                     params={params}
                     ref='Gmaps'
@@ -470,16 +584,16 @@ class Play extends Component {
                                               {task.value}
                                             </div>
                                             <div className="answers">
-                                                <Paper zDepth={1} className="answerBox" onClick={this.answerClick}>
+                                                <Paper zDepth={1} className="answerBox" onClick={() => this.answerClick(1)}>
                                                         <div>{task['1']}</div>
                                                 </Paper>
-                                                <Paper zDepth={1} className="answerBox" onClick={this.answerClick}>
+                                                <Paper zDepth={1} className="answerBox" onClick={() => this.answerClick(2)}>
                                                         <div>{task['2']}</div>
                                                 </Paper>
-                                                <Paper zDepth={1} className="answerBox" onClick={this.answerClick}>
+                                                <Paper zDepth={1} className="answerBox" onClick={() => this.answerClick(3)}>
                                                         <div>{task['3']}</div>
                                                 </Paper>
-                                                <Paper zDepth={1} className="answerBox" onClick={this.answerClick}>
+                                                <Paper zDepth={1} className="answerBox" onClick={() => this.answerClick(4)}>
                                                         <div>{task['4']}</div>
                                                 </Paper>
                                             </div>
@@ -493,18 +607,37 @@ class Play extends Component {
                     />
                   </div>}                  
             </Tab>
-            <Tab label="GAMES" >
+            <Tab label="GAMES" value={2}>
               <div>
-  
+                   <List>
+                      <Subheader>Games</Subheader>
+                      {this.state.games.map((game, index) =>
+                        <ListItem
+                          primaryText={game.name}
+                           key={index}
+                          className={this.state.gamesAvbl[index] ? "avbl" : 'notAvbl'}
+                          disableTouchRipple = {!this.state.gamesAvbl[index]}
+                          onClick={() => this.startGame(index)}
+                        />
+                      )}
+
+                    </List>
               </div>
             </Tab>
             <Tab
-              label="SETTINGS"
+              label="Leaderboard"
+              value={3}
             >
-              <div>
-                <p>
-                  This is a third example tab.
-                </p>
+              <div className="leaderboardMain">
+                <div className="leaderboardBox">
+                  <img src={Leaderboard} className="leaderboard"/>
+                </div>
+                  <Subheader>Top of your group</Subheader> 
+                  <List>
+                   {this.state.top.map((topItem, index) =>
+                      <ListItem key={index} primaryText={topItem.name} style={{fontFamily: 'Quantico, sans-serif !important'}}rightIcon={<b>{topItem.result}</b>}  />
+                    )}
+                  </List>
               </div>
             </Tab>
           </Tabs>

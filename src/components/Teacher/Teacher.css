@@ -29,7 +29,11 @@
 }
 .answerInput {
 	overflow: auto;
+	padding: 15px;
 }
 .slideAddAnswer {
-	padding: 15px;
+	overflow: hidden !important;
+}
+.listItemOption {
+	display: inline !important;
 }

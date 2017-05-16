@@ -7,8 +7,8 @@ import PaginationDot from './PaginationDot';
 const styles = {
   root: {
     position: 'absolute',
-    top: 8,
-    right: 8,
+    bottom: 8,
+    left: 8,
     display: 'flex',
     flexDirection: 'row',
   },

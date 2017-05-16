@@ -75,3 +75,17 @@
 	text-transform: uppercase;
 	font-weight: 900; 
 }
+.leaderboard {
+	width: 200px;
+	height: auto;
+}
+.leaderboardBox {
+	text-align: center;
+	font-family: 'Quantico', sans-serif !important;
+	background: #0086be;
+	color: #fff;
+	padding-bottom: 30px;
+}
+.notAvbl {
+	color: #d9d9d9 !important;
+}
